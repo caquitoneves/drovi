@@ -1,0 +1,185 @@
+{
+  "web": {
+    "header": {
+      "brand": "Drovi",
+      "howItWorks": "Como funciona",
+      "benefits": "Vantagens",
+      "business": {
+        "title": "Para empresas",
+        "plans": "Planos de assinatura",
+        "integration": "Integração com sistemas",
+        "scheduling": "Agendamento de coletas"
+      },
+      "registerStore": "Registre sua loja",
+      "faq": "Perguntas frequentes",
+      "contact": "Contato",
+      "language": "Idioma",
+      "becomeCourier": "Seja entregador",
+      "signIn": "Entrar"
+    },
+    "home": {
+      "meta": {
+        "title": "Sua empresa com entregas ágeis e confiáveis",
+        "description": "A Drovi é uma cooperativa digital de motoboys que conecta sua empresa a uma rede confiável de entregadores autônomos. Reduza custos, ganhe agilidade e apoie um modelo mais justo de logística urbana."
+      },
+      "hero": {
+        "announcement": "Leia nosso artigo mais recente",
+        "primaryCta": "Agendar chamada",
+        "secondaryCta": "Registrar-se"
+      },
+      "cases": {
+        "title": "Histórias de sucesso que impulsionam o mundo"
+      },
+      "features": {
+        "title": "Ferramentas poderosas para negócios modernos",
+        "description": "Descubra como nossos recursos de ponta podem revolucionar suas operações diárias.",
+        "items": [
+          {
+            "title": "Operações simplificadas",
+            "description": "Nossa plataforma simplifica fluxos de trabalho, reduz a complexidade e permite que pequenas empresas cresçam na economia moderna."
+          },
+          {
+            "title": "Análises em tempo real",
+            "description": "Obtenha insights instantâneos sobre o desempenho da sua empresa com ferramentas abrangentes de análises e relatórios."
+          },
+          {
+            "title": "Fluxos de trabalho automatizados",
+            "description": "Economize tempo e minimize erros com automação inteligente que lida com tarefas repetitivas para você."
+          },
+          {
+            "title": "Transações seguras",
+            "description": "Fique tranquilo sabendo que as operações do seu negócio estão protegidas com segurança e criptografia de nível empresarial."
+          }
+        ]
+      },
+      "stats": {
+        "title": "Resultados reais, impacto verdadeiro",
+        "description": "Junte-se a milhares de empresas que transformaram suas operações com nossa plataforma. Nossas soluções ajudaram a reduzir a sobrecarga administrativa em 60% e aumentar a eficiência operacional em média 45%.",
+        "items": [
+          {
+            "title": "Usuários ativos mensais",
+            "metric": "100000",
+            "delta": "10",
+            "type": "unit"
+          },
+          {
+            "title": "Usuários ativos diários",
+            "metric": "10000",
+            "delta": "-5",
+            "type": "unit"
+          },
+          {
+            "title": "Receita recorrente mensal",
+            "metric": "100000",
+            "delta": "20",
+            "type": "currency"
+          },
+          {
+            "title": "Custo de aquisição de clientes",
+            "metric": "100",
+            "delta": "-10",
+            "type": "currency"
+          }
+        ]
+      },
+      "testimonials": {
+        "title": "O que nossa comunidade está dizendo",
+        "items": [
+          {
+            "title": "A melhor decisão de todas",
+            "description": "Nosso objetivo era simplificar o comércio para PMEs — torná-lo mais fácil e rápido do que nunca — e conseguimos isso juntos.",
+            "author": {
+              "name": "Hayden Bleasel",
+              "image": "https://github.com/haydenbleasel.png"
+            }
+          },
+          {
+            "title": "Uma verdadeira virada de jogo",
+            "description": "Esta plataforma revolucionou a maneira como gerenciamos nossas operações diárias. Os ganhos de eficiência são notáveis.",
+            "author": {
+              "name": "Lee Robinson",
+              "image": "https://github.com/leerob.png"
+            }
+          },
+          {
+            "title": "Superou as expectativas",
+            "description": "A implementação foi perfeita e os resultados foram imediatos. Nossa equipe se adaptou rapidamente e a produtividade disparou.",
+            "author": {
+              "name": "shadcn",
+              "image": "https://github.com/shadcn.png"
+            }
+          },
+          {
+            "title": "Suporte excepcional",
+            "description": "Além de a plataforma ser poderosa, a equipe de suporte ao cliente tem sido excepcional em nos ajudar a maximizar seu potencial.",
+            "author": {
+              "name": "Pontus Abrahamsson",
+              "image": "https://github.com/pontusab.png"
+            }
+          }
+        ]
+      },
+      "faq": {
+        "title": "Perguntas comuns, respostas de especialistas",
+        "description": "Obtenha respostas rápidas para suas perguntas mais urgentes sobre nossa plataforma. Compilamos tudo o que você precisa saber para modernizar suas operações e começar com confiança.",
+        "cta": "Ainda tem dúvidas? Entre em contato conosco",
+        "items": [
+          {
+            "question": "O que é a plataforma?",
+            "answer": "É uma plataforma de logística e comércio que ajuda você a operar com confiança e controle."
+          },
+          {
+            "question": "Quão segura é a plataforma?",
+            "answer": "Nossa plataforma utiliza segurança de nível empresarial, incluindo criptografia de ponta a ponta e autenticação multifator, para garantir que sua atividade comercial permaneça completamente segura."
+          },
+          {
+            "question": "Quais recursos estão disponíveis?",
+            "answer": "Oferecemos ferramentas abrangentes, incluindo rastreamento em tempo real, integração com sistemas, automações e relatórios avançados para apoiar sua tomada de decisão."
+          },
+          {
+            "question": "Como funciona a precificação?",
+            "answer": "Oferecemos planos de preços flexíveis que escalam com o seu negócio — desde opções de entrada até soluções empresariais personalizadas."
+          },
+          {
+            "question": "Que tipo de suporte vocês oferecem?",
+            "answer": "Nossa equipe de suporte dedicada está disponível 24/7 via chat ao vivo, e-mail e telefone. Também oferecemos documentação completa e recursos de treinamento."
+          }
+        ]
+      },
+      "cta": {
+        "title": "Inicie a transformação do seu negócio",
+        "description": "Junte-se a milhares de empresas visionárias que já modernizaram suas operações. Nossa plataforma fornece as ferramentas, suporte e eficiência que você precisa para prosperar no mercado competitivo de hoje — e leva apenas minutos para começar."
+      }
+    },
+    "contact": {
+      "meta": {
+        "title": "Vamos falar sobre o seu negócio",
+        "description": "Agende uma consulta com nossa equipe para explorar como podemos simplificar suas operações e acelerar o crescimento do seu negócio."
+      },
+      "hero": {
+        "benefits": [
+          {
+            "title": "Consultoria personalizada",
+            "description": "Obtenha soluções sob medida e conselhos de especialistas alinhados às necessidades da sua empresa."
+          },
+          {
+            "title": "Integração sem esforço",
+            "description": "Integramos perfeitamente com seus sistemas existentes para uma transição suave e sem interrupções."
+          },
+          {
+            "title": "Orientação especializada",
+            "description": "Nossa equipe de especialistas o guiará por todo o processo para garantir que você aproveite ao máximo a plataforma."
+          }
+        ],
+        "form": {
+          "title": "Agendar uma reunião",
+          "date": "Data",
+          "firstName": "Nome",
+          "lastName": "Sobrenome",
+          "resume": "Enviar currículo",
+          "cta": "Agendar reunião"
+        }
+      }
+    }
+  }
+}

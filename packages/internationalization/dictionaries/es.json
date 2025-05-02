@@ -1,0 +1,193 @@
+{
+  "web": {
+    "global": {
+      "primaryCta": "Agendar llamada",
+      "secondaryCta": "Registrarse"
+    },
+    "header": {
+      "brand": "Drovi",
+      "howItWorks": "Cómo funciona",
+      "advantages": "Ventajas",
+      "business": {
+        "title": "Para empresas",
+        "plans": "Planes de suscripción",
+        "integration": "Integración con sistemas",
+        "scheduling": "Programación de recogidas"
+      },
+      "signUp": "Registra tu tienda",
+      "faq": "Preguntas frecuentes",
+      "contact": "Contacto",
+      "language": "Idioma",
+      "becomeCourier": "Sé repartidor",
+      "signIn": "Iniciar sesión"
+    },
+    "home": {
+      "meta": {
+        "title": "Tu empresa con entregas ágiles y confiables",
+        "description": "Drovi es una cooperativa digital de repartidores que conecta tu empresa con una red confiable de mensajeros autónomos. Reduce costos, gana agilidad y apoya un modelo más justo de logística urbana."
+      },
+      "hero": {
+        "announcement": "Lee nuestro artículo más reciente"
+      },
+      "cases": {
+        "title": "Historias de Éxito que Impulsan el Mundo"
+      },
+      "features": {
+        "title": "Herramientas Poderosas para Negocios Modernos",
+        "description": "Descubre cómo nuestros recursos de vanguardia pueden revolucionar tus operaciones diarias.",
+        "items": [
+          {
+            "title": "Operaciones Simplificadas",
+            "description": "Nuestra plataforma simplifica los flujos de trabajo, reduce la complejidad y permite que las pequeñas empresas crezcan en la economía moderna."
+          },
+          {
+            "title": "Análisis en Tiempo Real",
+            "description": "Obtén información instantánea sobre el rendimiento de tu empresa con herramientas completas de análisis e informes."
+          },
+          {
+            "title": "Flujos de Trabajo Automatizados",
+            "description": "Ahorra tiempo y minimiza errores con automatización inteligente que gestiona tareas repetitivas por ti."
+          },
+          {
+            "title": "Transacciones Seguras",
+            "description": "Opera con tranquilidad sabiendo que tus transacciones están protegidas con seguridad y cifrado de nivel empresarial."
+          }
+        ]
+      },
+      "stats": {
+        "title": "Resultados Reales, Impacto Real",
+        "description": "Únete a miles de empresas que han transformado sus operaciones con nuestra plataforma. Nuestras soluciones han ayudado a reducir la carga administrativa en un 60 % y a aumentar la eficiencia operativa en un promedio del 45 %. ",
+        "items": [
+          {
+            "title": "Usuarios activos mensuales",
+            "metric": "100000",
+            "delta": "10",
+            "type": "unit"
+          },
+          {
+            "title": "Usuarios activos diarios",
+            "metric": "10000",
+            "delta": "-5",
+            "type": "unit"
+          },
+          {
+            "title": "Ingresos recurrentes mensuales",
+            "metric": "100000",
+            "delta": "20",
+            "type": "currency"
+          },
+          {
+            "title": "Costo de adquisición de clientes",
+            "metric": "100",
+            "delta": "-10",
+            "type": "currency"
+          }
+        ]
+      },
+      "testimonials": {
+        "title": "Lo Que Dice Nuestra Comunidad",
+        "items": [
+          {
+            "title": "La mejor decisión de todas",
+            "description": "Nuestro objetivo era simplificar el comercio para las PYMES, hacerlo más fácil y rápido que nunca, y lo logramos juntos.",
+            "author": {
+              "name": "Hayden Bleasel",
+              "image": "https://github.com/haydenbleasel.png"
+            }
+          },
+          {
+            "title": "Un verdadero cambio de juego",
+            "description": "Esta plataforma revolucionó la manera en que gestionamos nuestras operaciones diarias. Las ganancias en eficiencia son notables.",
+            "author": {
+              "name": "Lee Robinson",
+              "image": "https://github.com/leerob.png"
+            }
+          },
+          {
+            "title": "Superó nuestras expectativas",
+            "description": "La implementación fue perfecta y los resultados fueron inmediatos. Nuestro equipo se adaptó rápidamente y la productividad se disparó.",
+            "author": {
+              "name": "shadcn",
+              "image": "https://github.com/shadcn.png"
+            }
+          },
+          {
+            "title": "Soporte excepcional",
+            "description": "Además de ser una plataforma potente, el equipo de atención al cliente ha sido excepcional al ayudarnos a aprovechar todo su potencial.",
+            "author": {
+              "name": "Pontus Abrahamsson",
+              "image": "https://github.com/pontusab.png"
+            }
+          }
+        ]
+      },
+      "faq": {
+        "title": "Preguntas Comunes, Respuestas de Expertos",
+        "description": "Obtén respuestas rápidas a tus preguntas más urgentes sobre nuestra plataforma. Hemos recopilado todo lo que necesitas saber para modernizar tus operaciones y comenzar con confianza.",
+        "cta": "¿Aún tienes dudas? Ponte en contacto con nosotros",
+        "items": [
+          {
+            "question": "¿Qué es la plataforma?",
+            "answer": "Es una plataforma de comercio que te ayuda a operar con confianza y control."
+          },
+          {
+            "question": "¿Qué tan segura es la plataforma?",
+            "answer": "Nuestra plataforma utiliza seguridad de nivel empresarial, incluido cifrado de extremo a extremo y autenticación multifactor, para garantizar que tu actividad comercial permanezca completamente protegida."
+          },
+          {
+            "question": "¿Qué funciones comerciales están disponibles?",
+            "answer": "Ofrecemos herramientas comerciales completas, incluyendo datos de mercado en tiempo real, gráficos avanzados, estrategias automatizadas y análisis profundos para respaldar decisiones informadas."
+          },
+          {
+            "question": "¿Cómo funciona el sistema de precios?",
+            "answer": "Ofrecemos planes de precios flexibles que escalan con tu negocio — desde opciones básicas para comerciantes individuales hasta soluciones empresariales."
+          },
+          {
+            "question": "¿Qué tipo de soporte ofrecen?",
+            "answer": "Nuestro equipo de soporte dedicado está disponible 24/7 por chat en vivo, correo electrónico y teléfono. También ofrecemos documentación extensa y recursos de capacitación."
+          }
+        ]
+      },
+      "cta": {
+        "title": "Inicia la Transformación de Tu Negocio",
+        "description": "Únete a miles de empresas visionarias que ya han modernizado sus operaciones. Nuestra plataforma proporciona las herramientas, el soporte y la eficiencia que necesitas para prosperar en el mercado competitivo actual — y solo toma unos minutos comenzar."
+      }
+    },
+    "blog": {
+      "meta": {
+        "title": "Blog",
+        "description": "Ideas, pensamientos e insights."
+      }
+    },
+    "contact": {
+      "meta": {
+        "title": "Hablemos de Tu Negocio",
+        "description": "Agenda una consulta con nuestro equipo para explorar cómo podemos simplificar tus operaciones y acelerar el crecimiento de tu negocio."
+      },
+      "hero": {
+        "benefits": [
+          {
+            "title": "Consultoría Personalizada",
+            "description": "Recibe soluciones personalizadas y asesoramiento experto alineado con las necesidades de tu empresa."
+          },
+          {
+            "title": "Integración sin Esfuerzo",
+            "description": "Nos integramos perfectamente con tus sistemas actuales para una transición fluida y sin interrupciones."
+          },
+          {
+            "title": "Orientación Experta",
+            "description": "Nuestro equipo de especialistas te guiará durante todo el proceso para garantizar que aproveches al máximo la plataforma."
+          }
+        ],
+        "form": {
+          "title": "Agendar una reunión",
+          "date": "Fecha",
+          "firstName": "Nombre",
+          "lastName": "Apellido",
+          "resume": "Enviar currículum",
+          "cta": "Agendar reunión"
+        }
+      }
+    }
+  }
+}

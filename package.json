@@ -1,0 +1,29 @@
+{
+  "name": "godrovi",
+  "version": "1.0.0",
+  "private": "true",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.10.0",
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "cross-env": "^7.0.3",
+    "turbo": "^2.5.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.7.0",
+    "@types/jest": "^29.5.14",
+    "bcryptjs": "^3.0.2",
+    "jest": "^29.7.0",
+    "next-auth": "^4.24.11",
+    "ts-jest": "^29.3.2"
+  }
+}

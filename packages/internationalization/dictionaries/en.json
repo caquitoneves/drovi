@@ -1,0 +1,193 @@
+{
+  "web": {
+    "global": {
+      "primaryCta": "Schedule a call",
+      "secondaryCta": "Register"
+    },
+    "header": {
+      "brand": "Drovi",
+      "howItWorks": "How it works",
+      "advantages": "Advantages",
+      "business": {
+        "title": "For businesses",
+        "plans": "Subscription plans",
+        "integration": "System integration",
+        "scheduling": "Pickup scheduling"
+      },
+      "signUp": "Register your store",
+      "faq": "Frequently Asked Questions",
+      "contact": "Contact",
+      "language": "Language",
+      "becomeCourier": "Become a courier",
+      "signIn": "Log in"
+    },
+    "home": {
+      "meta": {
+        "title": "Agile and reliable deliveries for your business",
+        "description": "Drovi is a digital cooperative of motorcycle couriers that connects your business to a trustworthy network of autonomous delivery professionals. Reduce costs, gain agility, and support a fairer model of urban logistics."
+      },
+      "hero": {
+        "announcement": "Read our latest article"
+      },
+      "cases": {
+        "title": "Success Stories That Drive the World"
+      },
+      "features": {
+        "title": "Powerful Tools for Modern Businesses",
+        "description": "Discover how our cutting-edge features can revolutionize your daily operations.",
+        "items": [
+          {
+            "title": "Simplified Operations",
+            "description": "Our platform streamlines workflows, reduces complexity, and empowers small businesses to thrive in the modern economy."
+          },
+          {
+            "title": "Real-Time Analytics",
+            "description": "Gain instant insights into your business performance with comprehensive analytics and reporting tools."
+          },
+          {
+            "title": "Automated Workflows",
+            "description": "Save time and minimize errors with smart automation that handles repetitive tasks for you."
+          },
+          {
+            "title": "Secure Transactions",
+            "description": "Rest easy knowing your business operations are protected with enterprise-grade security and encryption."
+          }
+        ]
+      },
+      "stats": {
+        "title": "Real Results, Real Impact",
+        "description": "Join thousands of companies that have transformed their operations with our platform. Our solutions have helped reduce administrative overhead by 60% and increase operational efficiency by an average of 45%.",
+        "items": [
+          {
+            "title": "Monthly active users",
+            "metric": "100000",
+            "delta": "10",
+            "type": "unit"
+          },
+          {
+            "title": "Daily active users",
+            "metric": "10000",
+            "delta": "-5",
+            "type": "unit"
+          },
+          {
+            "title": "Monthly recurring revenue",
+            "metric": "100000",
+            "delta": "20",
+            "type": "currency"
+          },
+          {
+            "title": "Customer acquisition cost",
+            "metric": "100",
+            "delta": "-10",
+            "type": "currency"
+          }
+        ]
+      },
+      "testimonials": {
+        "title": "What Our Community Is Saying",
+        "items": [
+          {
+            "title": "Best decision ever",
+            "description": "Our goal was to simplify commerce for SMEs — to make it easier and faster than ever — and we achieved that together.",
+            "author": {
+              "name": "Hayden Bleasel",
+              "image": "https://github.com/haydenbleasel.png"
+            }
+          },
+          {
+            "title": "A true game-changer",
+            "description": "This platform has revolutionized the way we manage our daily operations. The efficiency gains are remarkable.",
+            "author": {
+              "name": "Lee Robinson",
+              "image": "https://github.com/leerob.png"
+            }
+          },
+          {
+            "title": "Exceeded expectations",
+            "description": "Implementation was seamless and the results were immediate. Our team quickly adapted and productivity soared.",
+            "author": {
+              "name": "shadcn",
+              "image": "https://github.com/shadcn.png"
+            }
+          },
+          {
+            "title": "Outstanding support",
+            "description": "Beyond the platform’s power, the customer support team has been exceptional in helping us maximize its potential.",
+            "author": {
+              "name": "Pontus Abrahamsson",
+              "image": "https://github.com/pontusab.png"
+            }
+          }
+        ]
+      },
+      "faq": {
+        "title": "Common Questions, Expert Answers",
+        "description": "Get quick answers to your most pressing questions about our platform. We've compiled everything you need to know to modernize your operations and start with confidence.",
+        "cta": "Still have questions? Contact us",
+        "items": [
+          {
+            "question": "What is the platform?",
+            "answer": "It is a commerce platform that helps you operate with confidence and control."
+          },
+          {
+            "question": "How secure is the platform?",
+            "answer": "Our platform uses enterprise-grade security, including end-to-end encryption and multi-factor authentication, to ensure your business activity remains completely secure."
+          },
+          {
+            "question": "What commerce features are available?",
+            "answer": "We provide comprehensive commerce tools, including real-time market data, advanced charts, automated strategies, and deep analytics to support informed decision-making."
+          },
+          {
+            "question": "How does pricing work?",
+            "answer": "We offer flexible pricing plans that scale with your business — from entry-level options for solo merchants to enterprise-level solutions."
+          },
+          {
+            "question": "What kind of support do you offer?",
+            "answer": "Our dedicated support team is available 24/7 via live chat, email, and phone. We also offer extensive documentation and training resources."
+          }
+        ]
+      },
+      "cta": {
+        "title": "Start Transforming Your Business",
+        "description": "Join thousands of visionary companies that have already modernized their operations. Our platform provides the tools, support, and efficiency you need to thrive in today’s competitive market — and it only takes minutes to get started."
+      }
+    },
+    "blog": {
+      "meta": {
+        "title": "Blog",
+        "description": "Thoughts, ideas, and insights."
+      }
+    },
+    "contact": {
+      "meta": {
+        "title": "Let’s Talk About Your Business",
+        "description": "Schedule a consultation with our team to explore how we can simplify your operations and accelerate your business growth."
+      },
+      "hero": {
+        "benefits": [
+          {
+            "title": "Personalized Consulting",
+            "description": "Get tailored solutions and expert advice aligned with your business needs."
+          },
+          {
+            "title": "Effortless Integration",
+            "description": "We seamlessly integrate with your existing systems for a smooth and uninterrupted transition."
+          },
+          {
+            "title": "Expert Guidance",
+            "description": "Our team of experts will guide you through the entire process to ensure you get the most out of the platform."
+          }
+        ],
+        "form": {
+          "title": "Schedule a meeting",
+          "date": "Date",
+          "firstName": "First name",
+          "lastName": "Last name",
+          "resume": "Upload résumé",
+          "cta": "Schedule meeting"
+        }
+      }
+    }
+  }
+}
