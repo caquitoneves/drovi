@@ -15,3 +15,7 @@ Thumbs.db
 
 # Env
 *.env*
+
+# BaseHub
+.basehub
+./packages/cms/.basehub/*
