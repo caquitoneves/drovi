@@ -118,11 +118,9 @@ export const Header = ({ dictionary }: HeaderProps) => {
             <Button variant="ghost" asChild className="hidden md:inline">
               <Link href="/motoboy">{dictionary.web.header.becomeCourier}</Link>
             </Button>
-            <NavTransitionLink href='/sign-in'>
-              <Button className="px-6 py-2 border text-white rounded-lg">
-                {dictionary.web.header.signIn}
-              </Button>
-            </NavTransitionLink>
+            <Button asChild>
+              <Link href="/sign-in">{dictionary.web.header.signIn}</Link>
+            </Button>
           </div>
 
           {/* Ações Mobile */}
