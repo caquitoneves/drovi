@@ -1,3 +1,5 @@
+//apps/web/app/[locale]/(auth)/sign-in/page.tsx
+
 'use client';
 
 import Image from 'next/image';
@@ -50,7 +52,11 @@ export default function SignInPage() {
             <div className="flex items-center justify-center bg-white px-6 py-12">
                 <div className="w-full max-w-sm space-y-6">
                     <div className="text-left">
-                        <Image src={Logo} alt="Logotipo da Drovi" width={40} height={40} className="mb-2" />
+                        {/* Logo */}
+                        <div className="flex items-center gap-2">
+                            <Image src={Logo} alt="Logo" width={40} height={40} className="dark:invert" />
+                            <p className="whitespace-nowrap text-xl font-semibold text-[#222222] dark:invert">DROVI</p>
+                        </div>
                         <h1 className="text-2xl font-bold">Bom te ver de novo!</h1>
                         <p className="text-sm text-gray-500">Faça login para continuar</p>
                     </div>
@@ -132,7 +138,7 @@ export default function SignInPage() {
                     </p>
 
                     <p className="text-center text-xs text-gray-400 mt-4">
-                        © 2025 Motocoop. Todos os direitos reservados.
+                        © 2025 Drovi. Todos os direitos reservados.
                     </p>
                 </div>
             </div>

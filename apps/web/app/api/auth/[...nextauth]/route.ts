@@ -1,4 +1,4 @@
-// apps/api/src/auth/[...nextauth]/route.ts
+//apps/web/app/api/auth/[...nextauth]/route.ts
 
 import NextAuth, { AuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
