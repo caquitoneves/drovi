@@ -1737,9 +1737,9 @@ var getStuffFromEnv = (options) => {
   basehubUrl.searchParams.delete("ref");
   basehubUrl.searchParams.delete("draft");
   basehubUrl.searchParams.delete("api-version");
-  const gitBranch = null;
-  const gitCommitSHA = null;
-  const sdkBuildId2 = "bshb_sdk_94795be31acec";
+  const gitBranch = "feature/create-page-sign-up";
+  const gitCommitSHA = "40cd163e2e018951c2778bdaafbb56336cfda243";
+  const sdkBuildId2 = "bshb_sdk_edca5dc1360e4";
   return {
     isForcedDraft: true,
     draft,
@@ -1758,7 +1758,7 @@ var getStuffFromEnv = (options) => {
     }
   };
 };
-var sdkBuildId = "bshb_sdk_94795be31acec";
+var sdkBuildId = "bshb_sdk_edca5dc1360e4";
 var resolvedRef = { "repoHash": "d89453f5", "type": "branch", "ref": "main", "createSuggestedBranchLink": null, "id": "L3qoIeiUh6PhNhkXcmto0", "name": "main", "createdAt": "2025-04-30T08:46:00.222Z", "headCommitId": "sD4TIRFX7pkcmtX01IalP", "isDefault": true, "workingRootBlockId": "OCePB09427zXvrovillp7" };
 var gitBranchDeploymentURL = null;
 var productionDeploymentURL = null;

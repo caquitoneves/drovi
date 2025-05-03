@@ -217,10 +217,10 @@ export const getStuffFromEnv = (options) => {
     basehubUrl.searchParams.delete("api-version");
 
     // 3.
-    const gitBranch = null;
-    const gitCommitSHA = null;
+    const gitBranch = "feature/create-page-sign-up";
+    const gitCommitSHA = "40cd163e2e018951c2778bdaafbb56336cfda243";
 
-    const sdkBuildId = "bshb_sdk_94795be31acec";
+    const sdkBuildId = "bshb_sdk_edca5dc1360e4";
 
     return {
       isForcedDraft: true,
@@ -247,7 +247,7 @@ import type { TransactionStatusGenqlSelection } from './schema';
 export type * from "basehub/api-transaction";
 import { createFetcher } from "./runtime";
 
-export const sdkBuildId = "bshb_sdk_94795be31acec";
+export const sdkBuildId = "bshb_sdk_edca5dc1360e4";
 export const resolvedRef = {"repoHash":"d89453f5","type":"branch","ref":"main","createSuggestedBranchLink":null,"id":"L3qoIeiUh6PhNhkXcmto0","name":"main","createdAt":"2025-04-30T08:46:00.222Z","headCommitId":"sD4TIRFX7pkcmtX01IalP","isDefault":true,"workingRootBlockId":"OCePB09427zXvrovillp7"};
 export const gitBranchDeploymentURL = null;
 export const productionDeploymentURL = null;
