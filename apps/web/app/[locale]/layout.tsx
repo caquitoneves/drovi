@@ -8,6 +8,12 @@ import { fonts } from '@repo/design-system/lib/fonts';
 import { cn } from '@repo/design-system/lib/utils';
 import { getDictionary } from '@repo/internationalization';
 import type { ReactNode } from 'react';
+import type { Metadata } from 'next';
+import { PageTransition } from '@repo/design-system/components/layouts/page-transition'
+
+export const metadata: Metadata = {
+    title: 'Drovi',
+};
 
 type RootLayoutProperties = {
     readonly children: ReactNode;
@@ -25,11 +31,13 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
             className={cn(fonts, 'scroll-smooth')}
             suppressHydrationWarning
         >
-        <body>
-        <DesignSystemProvider>
-            {children}
-        </DesignSystemProvider>
-        </body>
+            <body>
+                <DesignSystemProvider>
+                    <PageTransition>
+                        {children}
+                    </PageTransition>
+                </DesignSystemProvider>
+            </body>
         </html>
     );
 };

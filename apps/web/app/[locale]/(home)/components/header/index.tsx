@@ -1,3 +1,5 @@
+//apps/web/app/[locale]/(home)/components/header/index.tsx
+
 'use client';
 
 import { ModeToggle } from '@repo/design-system/components/mode-toggle';
@@ -17,6 +19,7 @@ import Image from 'next/image';
 import { LanguageSwitcher } from './language-switcher';
 import Logo from '@repo/design-system/components/logo/logo.svg';
 import { AnimatePresence, motion } from 'framer-motion';
+import {NavTransitionLink} from "@repo/design-system/components/layouts/navigation-link";
 
 type HeaderProps = {
   dictionary: Dictionary;
@@ -115,9 +118,11 @@ export const Header = ({ dictionary }: HeaderProps) => {
             <Button variant="ghost" asChild className="hidden md:inline">
               <Link href="/motoboy">{dictionary.web.header.becomeCourier}</Link>
             </Button>
-            <Button asChild>
-              <Link href="/sign-in">{dictionary.web.header.signIn}</Link>
-            </Button>
+            <NavTransitionLink href='/sign-in'>
+              <Button className="px-6 py-2 border text-white rounded-lg">
+                {dictionary.web.header.signIn}
+              </Button>
+            </NavTransitionLink>
           </div>
 
           {/* Ações Mobile */}
