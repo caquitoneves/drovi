@@ -1,23 +1,23 @@
-'use client'
+//packages/design-system/components/dashboard/sidebar/business-nav.tsx
 
-import Link from 'next/link'
-import { Package, Truck, Settings } from 'lucide-react'
+import Link from 'next/link';
+import { LayoutDashboard, Package, Briefcase } from 'lucide-react';
 
-export default function BusinessNav() {
+export function BusinessNav() {
     return (
-        <nav className="flex flex-col gap-4">
-            <Link href="/portal/business/dashboard" className="nav-link">
-                <Package className="icon" />
-                Entregas
+        <>
+            <Link href="/portal/business/dashboard" className="flex items-center gap-2">
+                <LayoutDashboard className="h-5 w-5" />
+                <span className="hidden md:inline">Dashboard</span>
             </Link>
-            <Link href="/portal/business/motoboys" className="nav-link">
-                <Truck className="icon" />
-                Motoboys
+            <Link href="/portal/business/orders" className="flex items-center gap-2">
+                <Package className="h-5 w-5" />
+                <span className="hidden md:inline">Pedidos</span>
             </Link>
-            <Link href="/portal/business/settings" className="nav-link">
-                <Settings className="icon" />
-                Configurações
+            <Link href="/portal/business/companies" className="flex items-center gap-2">
+                <Briefcase className="h-5 w-5" />
+                <span className="hidden md:inline">Empresas</span>
             </Link>
-        </nav>
-    )
+        </>
+    );
 }

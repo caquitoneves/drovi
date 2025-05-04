@@ -1,23 +1,23 @@
-'use client'
+//packages/design-system/components/dashboard/sidebar/motoboy-nav.tsx
 
-import Link from 'next/link'
-import { MapPin, Clock, Settings } from 'lucide-react'
+import Link from 'next/link';
+import { LayoutDashboard, MapPin, Clock } from 'lucide-react';
 
-export default function MotoboyNav() {
+export function MotoboyNav() {
     return (
-        <nav className="flex flex-col gap-4">
-            <Link href="/portal/motoboy/dashboard" className="nav-link">
-                <MapPin className="icon" />
-                Minhas entregas
+        <>
+            <Link href="/portal/motoboy/dashboard" className="flex items-center gap-2">
+                <LayoutDashboard className="h-5 w-5" />
+                <span className="hidden md:inline">Dashboard</span>
             </Link>
-            <Link href="/portal/motoboy/historico" className="nav-link">
-                <Clock className="icon" />
-                Histórico
+            <Link href="/portal/motoboy/routes" className="flex items-center gap-2">
+                <MapPin className="h-5 w-5" />
+                <span className="hidden md:inline">Rotas</span>
             </Link>
-            <Link href="/portal/motoboy/settings" className="nav-link">
-                <Settings className="icon" />
-                Configurações
+            <Link href="/portal/motoboy/schedule" className="flex items-center gap-2">
+                <Clock className="h-5 w-5" />
+                <span className="hidden md:inline">Agenda</span>
             </Link>
-        </nav>
-    )
+        </>
+    );
 }

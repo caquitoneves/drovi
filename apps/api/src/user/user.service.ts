@@ -62,91 +62,90 @@ export class UserService {
   private readonly SALT_ROUNDS = 10;
 
   constructor(
-    @InjectModel(User.name)
-    private userModel: Model<UserDocument>,
+      @InjectModel(User.name)
+      private userModel: Model<UserDocument>,
   ) {}
 
   /**
-   * Busca todos os usuários (sem retornar passwordHash)
-   * @method findAll
-   * @returns {Promise<SafeUserDto[]>} Lista de usuários sem informações sensíveis
+   * Retorna todos os usuários cadastrados, sem incluir senha
+   * @returns {Promise<SafeUserDto[]>}
    */
   async findAll(): Promise<SafeUserDto[]> {
     const users = await this.userModel
-      .find()
-      .select('-passwordHash')
-      .lean()
-      .exec();
+        .find()
+        .select('-passwordHash')
+        .lean()
+        .exec();
     return users.map((user) => this.toSafeUserDto(user));
   }
 
   /**
-   * Busca um usuário por ID (sem retornar passwordHash)
-   * @method findOne
+   * Busca um usuário pelo ID, omitindo a senha
    * @param {string} id - ID do usuário
-   * @returns {Promise<SafeUserDto | null>} Usuário encontrado ou null
+   * @returns {Promise<SafeUserDto | null>}
    */
   async findOne(id: string): Promise<SafeUserDto | null> {
     const user = await this.userModel
-      .findById(id)
-      .select('-passwordHash')
-      .lean()
-      .exec();
+        .findById(id)
+        .select('-passwordHash')
+        .lean()
+        .exec();
     return user ? this.toSafeUserDto(user) : null;
   }
 
   /**
-   * Busca um usuário por ID (alias para findOne)
-   * @method findById
+   * Alias para findOne
    * @param {string} id - ID do usuário
-   * @returns {Promise<SafeUserDto | null>} Usuário encontrado ou null
+   * @returns {Promise<SafeUserDto | null>}
    */
   async findById(id: string): Promise<SafeUserDto | null> {
     return this.findOne(id);
   }
 
   /**
-   * Busca um documento completo do usuário por ID (para uso interno)
+   * Retorna o documento completo de um usuário, com ou sem hash da senha
    * @param id - ID do usuário
-   * @param includePasswordHash - Se deve incluir a hash de senha
-   * @returns UserDocument completo ou null
+   * @param includePasswordHash - Se deve incluir passwordHash
+   * @returns {Promise<UserDocument | null>}
    */
-  public async findCompleteUserById(
-    id: string,
-    includePasswordHash = false,
+  async findCompleteUserById(
+      id: string,
+      includePasswordHash = false,
   ): Promise<UserDocument | null> {
     const query = this.userModel.findById(id);
     const finalQuery = includePasswordHash
-      ? query
-      : query.select('-passwordHash');
+        ? query
+        : query.select('-passwordHash');
     return finalQuery.exec();
   }
 
   /**
-   * Busca um usuário por email
-   * @method findByEmail
-   * @param {string} email - Email do usuário
-   * @param {boolean} [includePasswordHash=false] - Se deve incluir a hash de senha
-   * @returns {Promise<SafeUserDto | null>} Usuário encontrado ou null
+   * Busca um usuário por e-mail.
+   * Se `includePasswordHash` for `true`, retorna o UserDocument com a senha.
+   * Caso contrário, retorna o DTO seguro (sem senha).
+   * @param email - E-mail do usuário
+   * @param includePasswordHash - Se deve incluir passwordHash
+   * @returns {Promise<SafeUserDto | UserDocument | null>}
    */
   async findByEmail(
-    email: string,
-    includePasswordHash: boolean = false,
-  ): Promise<SafeUserDto | null> {
+      email: string,
+      includePasswordHash: boolean = false,
+  ): Promise<SafeUserDto | UserDocument | null> {
     const query = this.userModel.findOne({ email });
     const finalQuery = includePasswordHash
-      ? query
-      : query.select('-passwordHash');
-    const user = await finalQuery.lean().exec();
-    return user ? this.toSafeUserDto(user) : null;
+        ? query
+        : query.select('-passwordHash');
+    const user = await finalQuery.exec();
+
+    if (!user) return null;
+
+    return includePasswordHash ? user : this.toSafeUserDto(user.toObject());
   }
 
   /**
-   * Cria um novo usuário e retorna dados sem a senha
-   * @method create
-   * @param {CreateUserDto} data - Dados do usuário a ser criado
-   * @returns {Promise<SafeUserDto>} Usuário criado sem informações sensíveis
-   * @throws {Error} Se ocorrer erro na criação
+   * Cria um novo usuário, gerando e salvando o hash da senha
+   * @param {CreateUserDto} data - Dados de criação
+   * @returns {Promise<SafeUserDto>}
    */
   async create(data: CreateUserDto): Promise<SafeUserDto> {
     const passwordHash = await bcrypt.hash(data.password, this.SALT_ROUNDS);
@@ -164,20 +163,18 @@ export class UserService {
   }
 
   /**
-   * Busca um usuário incluindo a senha (usado apenas para validação de login)
-   * @method findByEmailWithPassword
-   * @param {string} email - Email do usuário
-   * @returns {Promise<UserDocument | null>} Usuário com hash de senha ou null
+   * Busca um usuário com a senha (usado em login)
+   * @param email - E-mail do usuário
+   * @returns {Promise<UserDocument | null>}
    */
   async findByEmailWithPassword(email: string): Promise<UserDocument | null> {
     return this.userModel.findOne({ email }).select('+passwordHash').exec();
   }
 
   /**
-   * Converte um documento de usuário para o DTO seguro
-   * @method toSafeUserDto
-   * @param user - Documento ou objeto de usuário
-   * @returns SafeUserDto
+   * Converte um documento ou objeto de usuário em SafeUserDto
+   * @param user - Documento ou objeto plain
+   * @returns {SafeUserDto}
    */
   private toSafeUserDto(user: any): SafeUserDto {
     if (!user) throw new Error('User object is required');

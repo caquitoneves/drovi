@@ -121,6 +121,7 @@ export class AuthController {
         }
     }
 
+
     @Post('validate-token')
     @ApiOperation({
         summary: 'Validação de token',
