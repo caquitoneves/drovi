@@ -33,12 +33,7 @@ export class AuthController {
     }
 
     // Configura o cookie HTTP-only seguro
-    res.cookie(AUTH_COOKIE_NAME, result.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 86400000, // 1 dia
-    });
+    this.setCookiesOnLogin(res, result.token);
 
     return {
       user: result.user,
@@ -59,12 +54,7 @@ export class AuthController {
       );
 
       // Configura o cookie após registro
-      res.cookie(AUTH_COOKIE_NAME, result.token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 86400000, // 1 dia
-      });
+      this.setCookiesOnLogin(res, result.token);
 
       return {
         user: result.user,
@@ -79,15 +69,15 @@ export class AuthController {
   async validateToken(@Req() req: Request) {
     // Extrai o token do header Authorization ou dos cookies
     const token =
-      req.headers.authorization?.split(' ')[1] || req.cookies?.[AUTH_COOKIE_NAME];
+      req.headers.authorization?.split(' ')[1] ||
+      req.cookies?.[AUTH_COOKIE_NAME];
 
     if (!token) {
       throw new HttpException('Token não fornecido', HttpStatus.UNAUTHORIZED);
     }
 
     try {
-      const payload = this.authService.verifyJwt(token);
-      return payload;
+      return this.authService.verifyJwt(token);
     } catch (error) {
       throw new HttpException(
         'Token inválido ou expirado',
@@ -100,5 +90,14 @@ export class AuthController {
   async logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie(AUTH_COOKIE_NAME);
     return { success: true };
+  }
+
+  private setCookiesOnLogin(res: Response, token: string) {
+    res.cookie(AUTH_COOKIE_NAME, token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 86400000, // 1 dia
+    });
   }
 }
