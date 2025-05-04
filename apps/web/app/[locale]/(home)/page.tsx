@@ -1,7 +1,7 @@
 //apps/web/app/[locale]/(home)/page.tsx
 
 import { getDictionary } from '@repo/internationalization';
-import { Hero } from './components/hero';
+import { Hero } from './components/hero/hero';
 
 type HomeProps = {
     params: {
