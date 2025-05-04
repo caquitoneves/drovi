@@ -1,12 +1,12 @@
 // apps/web/middleware.ts
 import { NextResponse, type NextRequest } from 'next/server';
 import acceptLanguage from 'accept-language';
+import { AUTH_COOKIE_NAME } from '../common/constants/constantsDefinition';
 
 // Configurações
 const locales = ['pt', 'en', 'es'];
 const defaultLocale = 'pt';
 acceptLanguage.languages(locales);
-const AUTH_COOKIE_NAME = 'auth-token';
 
 // Rotas públicas (incluindo APIs públicas)
 const publicRoutes = [
