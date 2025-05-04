@@ -11,7 +11,7 @@ import { UserService } from '../user/user.service';
 import { User } from '../user/schemas/user.schema';
 import { RegisterDto } from './dto/register.dto';
 import { RegisterResponseDto } from './dto/response.dto';
-import { UserRole } from '../user/constants/user-role.enum';
+import { UserRole } from '../../../common/constants/user-role.enum';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Injectable()
