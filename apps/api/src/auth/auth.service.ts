@@ -12,7 +12,7 @@ import { User } from '../user/schemas/user.schema';
 import { LoginDto } from "./dto/login.dto";
 import { RegisterDto } from './dto/register.dto';
 import { RegisterResponseDto, LoginResponseDto } from './dto/response.dto';
-import { UserRole } from '../user/constants/user-role.enum';
+import { UserRole } from '../../../common/constants/user-role.enum';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import bcrypt from 'bcryptjs/umd/types';
 

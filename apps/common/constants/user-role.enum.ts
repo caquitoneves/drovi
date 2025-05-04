@@ -1,5 +1,3 @@
-// apps/api/src/user/user-role.enum.ts
-
 export enum UserRole {
   ADMIN = 'admin',
   MOTOBOY = 'motoboy',

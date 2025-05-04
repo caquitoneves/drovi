@@ -2,7 +2,7 @@
 
 import { SafeUserDto } from '../dto/safe-user.dto';
 import { UserDocument } from '../schemas/user.schema';
-import { UserRole } from '../constants/user-role.enum';
+import { UserRole } from '../../../../common/constants/user-role.enum';
 
 /**
  * Mapeia um UserDocument (ou parcial) para o DTO seguro usado nas respostas da API
@@ -10,14 +10,14 @@ import { UserRole } from '../constants/user-role.enum';
  * @returns DTO seguro para exposição pública
  */
 export function toSafeUserDto(user: Partial<UserDocument>): SafeUserDto {
-    if (!user._id || !user.email || !user.name || !user.role) {
-        throw new Error('Usuário inválido para conversão em SafeUserDto');
-    }
+  if (!user._id || !user.email || !user.name || !user.role) {
+    throw new Error('Usuário inválido para conversão em SafeUserDto');
+  }
 
-    return {
-        id: user._id.toString(),
-        email: user.email,
-        name: user.name,
-        role: user.role,
-    };
+  return {
+    id: user._id.toString(),
+    email: user.email,
+    name: user.name,
+    role: user.role,
+  };
 }
