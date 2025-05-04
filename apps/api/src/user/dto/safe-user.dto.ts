@@ -1,7 +1,7 @@
 //apps\api\src\user\dto\safe-user.dto.ts
 
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { UserRole } from '../../../../common/constants/user-role.enum';
+import { UserRole } from '../../../common/constants/user-role.enum';
 
 /**
  * DTO utilizado para expor dados seguros do usuário, sem informações sensíveis como senha.

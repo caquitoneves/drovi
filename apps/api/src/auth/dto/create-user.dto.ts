@@ -9,7 +9,7 @@ import {
   ValidateIf,
   MinLength,
 } from 'class-validator';
-import { UserRole } from '../../../../common/constants/user-role.enum';
+import { UserRole } from '../../../common/constants/user-role.enum';
 
 /**
  * DTO para criação técnica de usuários (uso interno/admin)
