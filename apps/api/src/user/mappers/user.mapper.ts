@@ -2,7 +2,7 @@
 
 import { SafeUserDto } from '../dto/safe-user.dto';
 import { UserDocument } from '../schemas/user.schema';
-import { UserRole } from '../constants/user-role.enum';
+import { UserRole } from '../../../common/constants/user-role.enum';
 
 /**
  * Mapeia um UserDocument (ou parcial) para o DTO seguro usado nas respostas da API

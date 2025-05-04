@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRole } from '../../user/constants/user-role.enum';
+import { UserRole } from '../../../common/constants/user-role.enum';
 
 /**
  * DTO para payload do token JWT

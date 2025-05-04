@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { User, UserDocument } from './schemas/user.schema';
 import { CreateUserDto } from '../auth/dto/create-user.dto';
-import { UserRole } from './constants/user-role.enum';
+import { UserRole } from '../../common/constants/user-role.enum';
 import * as bcrypt from 'bcryptjs';
 
 /**
