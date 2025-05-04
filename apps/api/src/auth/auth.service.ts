@@ -227,14 +227,16 @@ export class AuthService {
   async validateToken(token: string): Promise<TokenValidationResponseDto> {
     try {
       const payload = this.verifyJwt(token);
-      const user = await this.userService.findById(payload.sub);
+
+      // Usando o findCompleteUserById privado através de acesso temporário
+      const user = await (this.userService as any).findCompleteUserById(payload.sub);
 
       if (!user) {
         throw new UnauthorizedException('Usuário não encontrado');
       }
 
       return {
-        sub: user.id,
+        sub: user._id.toString(), // Usando _id pois estamos com o documento completo
         email: user.email,
         role: user.role,
         name: user.name,

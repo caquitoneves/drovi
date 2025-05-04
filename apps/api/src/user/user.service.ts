@@ -74,6 +74,31 @@ export class UserService {
     }
 
     /**
+     * Busca um usuário por ID (alias para findOne)
+     * @method findById
+     * @param {string} id - ID do usuário
+     * @returns {Promise<SafeUserDto | null>} Usuário encontrado ou null
+     */
+    async findById(id: string): Promise<SafeUserDto | null> {
+        return this.findOne(id);
+    }
+
+    /**
+     * Busca um documento completo do usuário por ID (para uso interno)
+     * @param id - ID do usuário
+     * @param includePasswordHash - Se deve incluir a hash de senha
+     * @returns UserDocument completo ou null
+     */
+    private async findCompleteUserById(
+        id: string,
+        includePasswordHash = false
+    ): Promise<UserDocument | null> {
+        const query = this.userModel.findById(id);
+        const finalQuery = includePasswordHash ? query : query.select('-passwordHash');
+        return finalQuery.exec();
+    }
+
+    /**
      * Busca um usuário por email
      * @method findByEmail
      * @param {string} email - Email do usuário
