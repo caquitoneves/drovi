@@ -2,14 +2,12 @@
 
 import { NextResponse, type NextRequest } from 'next/server';
 import acceptLanguage from 'accept-language';
-import { JwtPayload } from 'jsonwebtoken';
+import { AUTH_COOKIE_NAME } from '../common/constants';
 
 const locales = ['pt', 'en', 'es'];
 const defaultLocale = 'pt';
 acceptLanguage.languages(locales);
 
-// Configurações JWT
-const AUTH_COOKIE_NAME = 'auth-token';
 
 // Rotas públicas
 const publicRoutes = [
