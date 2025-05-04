@@ -1,38 +1,158 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, HttpStatus, HttpException } from '@nestjs/common';
 import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { Logger } from 'nestjs-pino';
+import { ConfigService } from '@nestjs/config';
+import { json, urlencoded } from 'express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-
-  // Middleware para parsing de cookies
-  app.use(cookieParser());
-
-  // Configuração global de pipes para validação
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true, // Remove propriedades não decoradas nos DTOs
-      transform: true, // Transforma tipos automaticamente
-      forbidNonWhitelisted: true, // Rejeita requisições com propriedades não permitidas
-    }),
-  );
-
-  // Configuração global de filtro de exceções
-  app.useGlobalFilters(new HttpExceptionFilter());
-
-  // Configuração de CORS para integração com o frontend
-  app.enableCors({
-    origin: process.env.FRONTEND_URL ?? 'http://localhost:3000', // Ajuste para a URL do seu frontend
-    credentials: true, // Permite cookies nas requisições
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: 'Content-Type, Accept, Authorization',
+  // 1. Criação da aplicação com buffer de logs
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+    snapshot: true,
   });
 
-  // Inicia a aplicação
-  await app.listen(process.env.PORT ?? 3001);
-  // Log de inicialização
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  // 2. Serviços iniciais
+  const configService = app.get(ConfigService);
+  const logger = app.get(Logger);
+
+  // 3. Configuração de limites de payload
+  app.use(json({ limit: '10mb' }));
+  app.use(urlencoded({ extended: true, limit: '10mb' }));
+
+  // 4. Middlewares essenciais
+  app.use(cookieParser(configService.get('COOKIE_SECRET')));
+  app.useLogger(logger);
+
+  // 5. Configuração global de validação
+  app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+        transformOptions: {
+          enableImplicitConversion: true,
+          exposeDefaultValues: true,
+        },
+        errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        exceptionFactory: (errors) => {
+          const formattedErrors = errors.reduce((acc, error) => {
+            acc[error.property] = Object.values(error.constraints || {});
+            return acc;
+          }, {});
+          throw new HttpException(
+              {
+                statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+                message: 'Validation failed',
+                errors: formattedErrors,
+                timestamp: new Date().toISOString(),
+              },
+              HttpStatus.UNPROCESSABLE_ENTITY,
+          );
+        },
+      }),
+  );
+
+  // 6. Filtro global de exceções
+  app.useGlobalFilters(new HttpExceptionFilter());
+
+  // 7. Configuração de CORS aprimorada
+  app.enableCors({
+    origin: configService.get('FRONTEND_URLS')?.split(',') || [
+      'http://localhost:3000',
+      'http://localhost:3001',
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Accept',
+      'X-Requested-With',
+      'X-CSRF-Token',
+      'X-Forwarded-For',
+      'X-Real-IP',
+    ],
+    exposedHeaders: ['Content-Disposition'],
+  });
+
+  // 8. Documentação Swagger (apenas em desenvolvimento)
+  if (configService.get('NODE_ENV') !== 'production') {
+    const swaggerConfig = new DocumentBuilder()
+        .setTitle('Drovi Delivery API')
+        .setDescription(`
+        ## API para gestão de entregas
+        **Roles disponíveis:**
+        - ADMIN: Acesso completo
+        - BUSINESS: Gestão de pedidos
+        - MOTOBOY: Acompanhamento de entregas
+        
+        ### Autenticação
+        Use \`/auth/login\` para obter o token e clique no botão **Authorize** acima
+      `)
+        .setVersion('1.0')
+        .addBearerAuth(
+            {
+              type: 'http',
+              scheme: 'bearer',
+              bearerFormat: 'JWT',
+              description: 'Insira o token JWT sem "Bearer"',
+            },
+            'jwt',
+        )
+        .addCookieAuth(
+            'auth-token',
+            {
+              type: 'apiKey',
+              in: 'cookie',
+              description: 'Token de autenticação HTTP-Only',
+            },
+            'cookie',
+        )
+        .build();
+
+    const document = SwaggerModule.createDocument(app, swaggerConfig);
+    SwaggerModule.setup('api-docs', app, document, {
+      customSiteTitle: 'Drovi API Explorer',
+      swaggerOptions: {
+        persistAuthorization: true,
+        displayRequestDuration: true,
+        filter: true,
+        showCommonExtensions: true,
+        defaultModelsExpandDepth: -1, // Esconde os schemas por padrão
+        tagsSorter: 'alpha',
+        operationsSorter: (a, b) => {
+          const order = ['POST', 'GET', 'PATCH', 'PUT', 'DELETE'];
+          return order.indexOf(a.get('method')) - order.indexOf(b.get('method'));
+        },
+      },
+      customCss: `
+        .topbar { background-color: #1e293b !important }
+        .swagger-ui .info { margin: 20px 0 !important }
+      `,
+    });
+  }
+
+  // 9. Configurações finais
+  app.enableShutdownHooks();
+  app.setGlobalPrefix('api', {
+    exclude: ['health', 'api-docs'],
+  });
+
+  // 10. Inicialização do servidor
+  const port = configService.get('PORT') || 3001;
+  await app.listen(port, '0.0.0.0');
+
+  // 11. Logs de inicialização
+  logger.log(`🚀 Aplicação rodando em ${await app.getUrl()}/api-docs`);
+  logger.log(`📌 Ambiente: ${configService.get('NODE_ENV')}`);
+  logger.log(`🔒 CORS habilitado para: ${configService.get('FRONTEND_URLS')}`);
 }
-bootstrap();
+
+bootstrap().catch((error) => {
+  new Logger('Main').error('Falha na inicialização', error.stack);
+  process.exit(1);
+});

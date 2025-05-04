@@ -1,54 +1,126 @@
-// apps/api/src/auth/auth.service.ts
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, InternalServerErrorException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcryptjs';
 import { UserRole } from '../user/user-role.enum';
 import { UserDocument } from '../user/schemas/user.schema';
+import {
+    LoginResponseDto,
+    RegisterResponseDto,
+    TokenPayloadDto,
+    TokenValidationResponseDto
+} from './dto/response.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
+    private readonly jwtExpiresIn: string;
+    private readonly bcryptSaltRounds: number;
+
     constructor(
-        private jwtService: JwtService,
-        private userService: UserService,
-    ) {}
-
-
-    generateJwt(payload: { sub: string; email: string; role: UserRole }) {
-        return this.jwtService.sign(payload, {
-            expiresIn: '1d',
-        });
+        private readonly jwtService: JwtService,
+        private readonly userService: UserService,
+        private readonly configService: ConfigService,
+    ) {
+        this.jwtExpiresIn = this.configService.get<string>('JWT_EXPIRES_IN') || '1d';
+        this.bcryptSaltRounds = parseInt(this.configService.get<string>('BCRYPT_SALT_ROUNDS')) || 10;
     }
 
-
-    verifyJwt(token: string) {
+    /**
+     * Gera um token JWT assinado
+     * @param payload Dados a serem incluídos no token
+     * @returns Token JWT assinado
+     * @throws InternalServerErrorException se falhar ao gerar token
+     */
+    generateJwt(payload: TokenPayloadDto): string {
         try {
-            return this.jwtService.verify(token);
+            return this.jwtService.sign(
+                { ...payload, iat: Math.floor(Date.now() / 1000) },
+                {
+                    expiresIn: this.jwtExpiresIn,
+                    secret: this.configService.get<string>('JWT_SECRET'),
+                }
+            );
         } catch (error) {
-            throw new UnauthorizedException('Token inválido ou expirado');
+            throw new InternalServerErrorException({
+                message: 'Falha ao gerar token',
+                code: 'TOKEN_GENERATION_FAILED',
+            });
         }
     }
 
+    /**
+     * Verifica e decodifica um token JWT
+     * @param token Token JWT a ser verificado
+     * @returns Payload decodificado
+     * @throws UnauthorizedException se o token for inválido ou expirado
+     */
+    verifyJwt(token: string): TokenValidationResponseDto {
+        try {
+            const payload = this.jwtService.verify(token, {
+                secret: this.configService.get<string>('JWT_SECRET'),
+            });
 
-    async validateUser(email: string, password: string): Promise<UserDocument | null> {
-        const user = await this.userService.findByEmail(email, true);
-        if (!user || !user.passwordHash) return null;
-
-        const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
-        return isPasswordValid ? user : null;
+            return {
+                sub: payload.sub,
+                email: payload.email,
+                role: payload.role,
+                name: payload.name,
+                iat: payload.iat,
+                exp: payload.exp,
+            };
+        } catch (error) {
+            throw new UnauthorizedException({
+                message: 'Token inválido ou expirado',
+                code: 'INVALID_TOKEN',
+                error: error.message,
+            });
+        }
     }
 
+    /**
+     * Valida as credenciais do usuário
+     * @param email E-mail do usuário
+     * @param password Senha não criptografada
+     * @returns Usuário válido ou null
+     * @throws InternalServerErrorException se ocorrer erro na validação
+     */
+    async validateUser(email: string, password: string): Promise<UserDocument | null> {
+        try {
+            const user = await this.userService.findByEmail(email, true);
+            if (!user?.passwordHash) return null;
 
-    async login(email: string, password: string) {
+            const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+            return isPasswordValid ? user : null;
+        } catch (error) {
+            throw new InternalServerErrorException({
+                message: 'Falha na validação do usuário',
+                code: 'USER_VALIDATION_FAILED',
+            });
+        }
+    }
+
+    /**
+     * Realiza o login do usuário
+     * @param email E-mail do usuário
+     * @param password Senha não criptografada
+     * @returns Dados do usuário e token JWT
+     * @throws UnauthorizedException se as credenciais forem inválidas
+     */
+    async login(email: string, password: string): Promise<LoginResponseDto> {
         const user = await this.validateUser(email, password);
         if (!user) {
-            throw new UnauthorizedException('Credenciais inválidas');
+            throw new UnauthorizedException({
+                message: 'Credenciais inválidas',
+                code: 'INVALID_CREDENTIALS',
+            });
         }
 
         const token = this.generateJwt({
             sub: user._id.toString(),
             email: user.email,
-            role: user.role
+            role: user.role,
+            name: user.name,
         });
 
         return {
@@ -62,71 +134,102 @@ export class AuthService {
         };
     }
 
-    // Metodo REFATORADO para cadastro específico
+    /**
+     * Registra um novo usuário
+     * @param name Nome completo
+     * @param email E-mail válido
+     * @param password Senha forte
+     * @param userType Tipo de usuário (business ou motoboy)
+     * @param additionalData Dados adicionais específicos por tipo
+     * @returns Dados do usuário e token JWT
+     * @throws UnauthorizedException se o e-mail já estiver em uso
+     */
     async register(
         name: string,
         email: string,
         password: string,
-        userType: 'business' | 'motoboy', // Novo parâmetro obrigatório
-        additionalData?: { // Dados adicionais específicos por tipo
-            cnpj?: string;       // Para business
-            vehicleType?: string // Para motoboy
+        userType: 'business' | 'motoboy',
+        additionalData?: {
+            cnpj?: string;
+            vehicleType?: string;
         }
-    ) {
-        const existing = await this.userService.findByEmail(email);
-        if (existing) {
-            throw new UnauthorizedException('E-mail já está em uso');
-        }
+    ): Promise<RegisterResponseDto> {
+        try {
+            const existingUser = await this.userService.findByEmail(email);
+            if (existingUser) {
+                throw new UnauthorizedException({
+                    message: 'E-mail já está em uso',
+                    code: 'EMAIL_IN_USE',
+                });
+            }
 
-        // Determina a role baseada no userType
-        const role = userType === 'motoboy'
-            ? UserRole.Motoboy
-            : UserRole.Business;
+            const role = userType === 'motoboy' ? UserRole.Motoboy : UserRole.Business;
+            const createdUser = await this.userService.create({
+                name,
+                email,
+                password,
+                role,
+                ...additionalData,
+            });
 
-        const createdUser = await this.userService.create({
-            name,
-            email,
-            password,
-            role,
-            ...additionalData // Adiciona campos específicos
-        });
-
-        const token = this.generateJwt({
-            sub: createdUser._id.toString(),
-            email,
-            role
-        });
-
-        return {
-            user: {
-                id: createdUser._id.toString(),
+            const token = this.generateJwt({
+                sub: createdUser._id.toString(),
                 email: createdUser.email,
+                role,
                 name: createdUser.name,
-                role: createdUser.role,
-                ...additionalData // Retorna dados específicos no payload
-            },
-            token,
-        };
+            });
+
+            return {
+                user: {
+                    id: createdUser._id.toString(),
+                    email: createdUser.email,
+                    name: createdUser.name,
+                    role: createdUser.role,
+                    ...additionalData,
+                },
+                token,
+            };
+        } catch (error) {
+            if (error instanceof UnauthorizedException) throw error;
+            throw new InternalServerErrorException({
+                message: 'Falha no registro do usuário',
+                code: 'REGISTRATION_FAILED',
+            });
+        }
     }
 
-    // Metodo para validação de token (usado pelo middleware)
-    async validateToken(token: string) {
+    /**
+     * Valida um token JWT e retorna os dados do usuário
+     * @param token Token JWT
+     * @returns Dados do usuário associado ao token
+     * @throws UnauthorizedException se o token ou usuário forem inválidos
+     */
+    async validateToken(token: string): Promise<TokenValidationResponseDto> {
         try {
             const payload = this.verifyJwt(token);
             const user = await this.userService.findById(payload.sub);
 
             if (!user) {
-                throw new UnauthorizedException('Usuário não encontrado');
+                throw new UnauthorizedException({
+                    message: 'Usuário não encontrado',
+                    code: 'USER_NOT_FOUND',
+                });
             }
 
             return {
                 sub: user._id.toString(),
                 email: user.email,
                 role: user.role,
-                name: user.name
+                name: user.name,
+                iat: payload.iat,
+                exp: payload.exp,
             };
         } catch (error) {
-            throw new UnauthorizedException('Token inválido');
+            if (error instanceof UnauthorizedException) throw error;
+            throw new UnauthorizedException({
+                message: 'Token inválido',
+                code: 'INVALID_TOKEN',
+            });
         }
     }
 }

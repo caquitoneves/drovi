@@ -4,13 +4,42 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { Response, Request } from 'express';
-import { UserRole } from '../user/user-role.enum';
+import {
+    ApiTags,
+    ApiOperation,
+    ApiResponse,
+    ApiBody,
+    ApiCookieAuth,
+    ApiBearerAuth,
+    ApiExtraModels,
+    ApiCreatedResponse
+} from '@nestjs/swagger';
+import { UserResponseDto, TokenValidationResponseDto } from './dto/response.dto';
 
+@ApiTags('Autenticação')
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
     @Post('login')
+    @ApiOperation({
+        summary: 'Login de usuário',
+        description: 'Autentica usuários (business ou motoboy) e retorna cookie HTTP-only'
+    })
+    @ApiBody({ type: LoginDto })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'Login bem-sucedido',
+        type: UserResponseDto
+    })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'Credenciais inválidas'
+    })
+    @ApiResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Dados inválidos'
+    })
     async login(
         @Body() loginDto: LoginDto,
         @Res({ passthrough: true }) res: Response
@@ -37,12 +66,28 @@ export class AuthController {
     }
 
     @Post('register')
+    @ApiOperation({
+        summary: 'Registro de usuário',
+        description: 'Cria nova conta de business ou motoboy'
+    })
+    @ApiBody({ type: RegisterDto })
+    @ApiCreatedResponse({
+        description: 'Registro bem-sucedido',
+        type: UserResponseDto
+    })
+    @ApiResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Dados inválidos ou e-mail em uso'
+    })
+    @ApiResponse({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        description: 'Erro de validação'
+    })
     async register(
         @Body() dto: RegisterDto,
         @Res({ passthrough: true }) res: Response
     ) {
         try {
-            // Validação do tipo de usuário
             if (!['business', 'motoboy'].includes(dto.userType)) {
                 throw new HttpException('Tipo de usuário inválido', HttpStatus.BAD_REQUEST);
             }
@@ -51,7 +96,7 @@ export class AuthController {
                 dto.name,
                 dto.email,
                 dto.password,
-                dto.userType as 'business' | 'motoboy', // Garante o tipo
+                dto.userType as 'business' | 'motoboy',
                 {
                     cnpj: dto.cnpj,
                     vehicleType: dto.vehicleType
@@ -77,6 +122,21 @@ export class AuthController {
     }
 
     @Post('validate-token')
+    @ApiOperation({
+        summary: 'Validação de token',
+        description: 'Verifica se o token JWT/cookie é válido'
+    })
+    @ApiBearerAuth()
+    @ApiCookieAuth('auth-token')
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'Token válido',
+        type: TokenValidationResponseDto
+    })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'Token inválido ou expirado'
+    })
     async validateToken(@Req() req: Request) {
         try {
             const token = this.extractToken(req);
@@ -84,7 +144,6 @@ export class AuthController {
                 throw new HttpException('Token não fornecido', HttpStatus.UNAUTHORIZED);
             }
 
-            // Usa o novo método validateToken que verifica no banco
             const userData = await this.authService.validateToken(token);
             return userData;
         } catch (error) {
@@ -96,6 +155,12 @@ export class AuthController {
     }
 
     @Post('logout')
+    @ApiOperation({ summary: 'Logout', description: 'Remove o cookie de autenticação' })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'Logout bem-sucedido',
+        schema: { example: { success: true } }
+    })
     async logout(@Res({ passthrough: true }) res: Response) {
         res.clearCookie('auth-token');
         return { success: true };
