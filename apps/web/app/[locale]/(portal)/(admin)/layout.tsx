@@ -1,15 +1,13 @@
-// apps/web/app/[locale]/(portal)/(admin)/layout.tsx
+// apps/web/app/(portal)/(admin)/layout.tsx
+import { Sidebar } from '@repo/design-system/components/dashboard/base-layout'
 
-import { BaseLayout } from '@repo/design-system/components/dashboard/base-layout';
-
-export default function AdminLayout({
-                                        children,
-                                    }: {
-    children: React.ReactNode;
-}) {
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
     return (
-        <BaseLayout role="admin">
-            {children}
-        </BaseLayout>
-    );
+        <div className="flex h-screen">
+            <Sidebar role="admin" />
+            <main className="flex-1 p-6">
+                {children}
+            </main>
+        </div>
+    )
 }

@@ -1,19 +1,22 @@
-// packages/design-system/src/components/dashboard/base-layout.tsx
+import { ReactNode } from 'react'
+import AdminNav from './sidebar/admin-nav'
+import BusinessNav from './sidebar/business-nav'
+import MotoboyNav from './sidebar/motoboy-nav'
 
-export const BaseLayout = ({
-                               role, // 'admin' | 'motoboy' | 'business'
-                               children
-                           }: {
-    role: string;
-    children: React.ReactNode;
-}) => {
+type Role = 'admin' | 'business' | 'motoboy'
+
+interface SidebarProps {
+    role: Role
+    children?: ReactNode
+}
+
+export function Sidebar({ role, children }: SidebarProps) {
     return (
-        <div className={`dashboard ${role}-theme`}>
-            <Sidebar role={role} />
-            <div className="content">
-                <Header role={role} />
-                {children}
-            </div>
-        </div>
-    );
-};
+        <aside className="w-64 bg-white border-r h-full p-4">
+            {role === 'admin' && <AdminNav />}
+            {role === 'business' && <BusinessNav />}
+            {role === 'motoboy' && <MotoboyNav />}
+            {children}
+        </aside>
+    )
+}

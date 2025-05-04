@@ -211,3 +211,11 @@
     --tw-prose-invert-th-borders: var(--color-border);
     --tw-prose-invert-td-borders: var(--color-border);
 }
+
+.nav-link {
+    @apply flex items-center gap-3 px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition;
+}
+
+.nav-link .icon {
+    @apply w-5 h-5;
+}
