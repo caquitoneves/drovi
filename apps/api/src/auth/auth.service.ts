@@ -9,10 +9,12 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from '../user/user.service';
 import { User } from '../user/schemas/user.schema';
+import { LoginDto } from "./dto/login.dto";
 import { RegisterDto } from './dto/register.dto';
-import { RegisterResponseDto } from './dto/response.dto';
+import { RegisterResponseDto, LoginResponseDto } from './dto/response.dto';
 import { UserRole } from '../../../common/constants/user-role.enum';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import bcrypt from 'bcryptjs/umd/types';
 
 @Injectable()
 export class AuthService {
@@ -117,5 +119,54 @@ export class AuthService {
       if (error instanceof UnauthorizedException) throw error;
       throw new InternalServerErrorException('Falha no registro');
     }
+  }
+
+  /**
+   * Autentica um usuário (business ou motoboy)
+   * @param email - E-mail do usuário
+   * @param password - Senha do usuário
+   * @returns Dados do usuário autenticado e token JWT
+   */
+  @ApiOperation({
+    summary: 'Login',
+    description: 'Autentica o usuário e retorna um token JWT',
+  })
+  @ApiBody({ type: LoginDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Login realizado com sucesso',
+    type: LoginResponseDto,
+  })
+  @ApiResponse({ status: 401, description: 'Credenciais inválidas' })
+  async login(
+      email: string,
+      password: string,
+  ): Promise<{ user: LoginResponseDto['user']; token: string }> {
+    const user = await this.userService.findByEmailWithPassword(email); // Inclui passwordHash
+
+    if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+      throw new UnauthorizedException('Credenciais inválidas');
+    }
+
+    const token = this.generateJwt({
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+      name: user.name,
+    });
+
+    const userResponse: LoginResponseDto['user'] = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      ...(user.role === 'business'
+          ? { cnpj: user.cnpj }
+          : user.role === 'motoboy'
+              ? { vehicleType: user.vehicleType }
+              : {}),
+    };
+
+    return { user: userResponse, token };
   }
 }

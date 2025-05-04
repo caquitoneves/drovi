@@ -18,6 +18,12 @@ export class User {
 
   @Prop({ required: true })
   passwordHash: string;
+
+  @Prop({ required: false })
+  cnpj?: string;
+
+  @Prop({ required: false })
+  vehicleType?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

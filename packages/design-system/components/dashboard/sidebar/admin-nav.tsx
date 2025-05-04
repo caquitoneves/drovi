@@ -1,23 +1,23 @@
-'use client'
+//packages/design-system/components/dashboard/sidebar/admin-nav.tsx
 
-import Link from 'next/link'
-import { Home, Users, Settings } from 'lucide-react'
+import Link from 'next/link';
+import { LayoutDashboard, Users, Settings } from 'lucide-react';
 
-export default function AdminNav() {
+export function AdminNav() {
     return (
-        <nav className="flex flex-col gap-4">
-            <Link href="/portal/admin/dashboard" className="nav-link">
-                <Home className="icon" />
-                Dashboard
+        <>
+            <Link href="/portal/admin/dashboard" className="flex items-center gap-2">
+                <LayoutDashboard className="h-5 w-5" />
+                <span className="hidden md:inline">Dashboard</span>
             </Link>
-            <Link href="/portal/admin/users" className="nav-link">
-                <Users className="icon" />
-                Usuários
+            <Link href="/portal/admin/users" className="flex items-center gap-2">
+                <Users className="h-5 w-5" />
+                <span className="hidden md:inline">Usuários</span>
             </Link>
-            <Link href="/portal/admin/settings" className="nav-link">
-                <Settings className="icon" />
-                Configurações
+            <Link href="/portal/admin/config" className="flex items-center gap-2">
+                <Settings className="h-5 w-5" />
+                <span className="hidden md:inline">Configurações</span>
             </Link>
-        </nav>
-    )
+        </>
+    );
 }
