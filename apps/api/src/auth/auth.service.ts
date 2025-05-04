@@ -1,12 +1,11 @@
-//apps/api/src/auth/auth.service.ts
+// apps/api/src/auth/auth.service.ts
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcryptjs';
 import { UserRole } from '../user/user-role.enum';
 import { UserDocument } from '../user/schemas/user.schema';
-
 
 @Injectable()
 export class AuthService {
@@ -15,16 +14,22 @@ export class AuthService {
         private userService: UserService,
     ) {}
 
-    generateJwt(payload: { sub: string; email: string }) {
-        return this.jwtService.sign(payload);
+    generateJwt(payload: { sub: string; email: string; role?: UserRole }) {
+        return this.jwtService.sign(payload, {
+            expiresIn: '1d',
+        });
     }
 
     verifyJwt(token: string) {
-        return this.jwtService.verify(token);
+        try {
+            return this.jwtService.verify(token);
+        } catch (error) {
+            throw new UnauthorizedException('Token inválido ou expirado');
+        }
     }
 
     async validateUser(email: string, password: string): Promise<UserDocument | null> {
-        const user = await this.userService.findByEmail(email);
+        const user = await this.userService.findByEmail(email, true); // Certifique-se que o método findByEmail inclui o passwordHash
         if (!user || !user.passwordHash) return null;
 
         const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
@@ -33,9 +38,15 @@ export class AuthService {
 
     async login(email: string, password: string) {
         const user = await this.validateUser(email, password);
-        if (!user) return null;
+        if (!user) {
+            throw new UnauthorizedException('Credenciais inválidas');
+        }
 
-        const token = this.generateJwt({ sub: user._id.toString(), email: user.email });
+        const token = this.generateJwt({
+            sub: user._id.toString(),
+            email: user.email,
+            role: user.role // Adicionado role ao token
+        });
 
         return {
             user: {
@@ -51,7 +62,7 @@ export class AuthService {
     async register(name: string, email: string, password: string, role: UserRole = UserRole.Business) {
         const existing = await this.userService.findByEmail(email);
         if (existing) {
-            throw new Error('E-mail já está em uso');
+            throw new UnauthorizedException('E-mail já está em uso');
         }
 
         const createdUser = await this.userService.create({
@@ -61,7 +72,11 @@ export class AuthService {
             role,
         });
 
-        const token = this.generateJwt({ sub: createdUser._id.toString(), email });
+        const token = this.generateJwt({
+            sub: createdUser._id.toString(),
+            email,
+            role: createdUser.role
+        });
 
         return {
             user: {
