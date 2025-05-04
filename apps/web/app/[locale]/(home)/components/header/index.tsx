@@ -1,3 +1,5 @@
+//apps/web/app/[locale]/(home)/components/header/index.tsx
+
 'use client';
 
 import { ModeToggle } from '@repo/design-system/components/mode-toggle';
@@ -17,6 +19,7 @@ import Image from 'next/image';
 import { LanguageSwitcher } from './language-switcher';
 import Logo from '@repo/design-system/components/logo/logo.svg';
 import { AnimatePresence, motion } from 'framer-motion';
+import {NavTransitionLink} from "@repo/design-system/components/layouts/navigation-link";
 
 type HeaderProps = {
   dictionary: Dictionary;

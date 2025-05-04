@@ -2,6 +2,7 @@
 
 import { getDictionary } from '@repo/internationalization';
 import { Hero } from './components/hero';
+import { MotionDiv  } from '@repo/design-system/components/layouts/motion-div';
 
 type HomeProps = {
     params: {
@@ -15,7 +16,9 @@ const Home = async ({ params }: HomeProps) => {
 
     return (
         <>
-            <Hero dictionary={dictionary} />
+            <MotionDiv >
+                <Hero dictionary={dictionary} />
+            </MotionDiv >
         </>
     );
 };

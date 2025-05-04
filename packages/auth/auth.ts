@@ -1,11 +1,8 @@
 // packages/auth/auth.ts
-
-import { PrismaAdapter } from '@auth/prisma-adapter';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import AppleProvider from 'next-auth/providers/apple';
 import { AuthOptions } from 'next-auth';
-import { prisma } from './lib/prisma';
 import axios from 'axios';
 // import type { OAuthConfig } from 'next-auth/providers';
 
@@ -45,7 +42,7 @@ const MicrosoftProvider = (options = {}): OAuthConfig<any> => ({
 });
 
 */
-
+/*
 export const authOptions: AuthOptions = {
     adapter: PrismaAdapter(prisma),
     providers: [
@@ -112,3 +109,5 @@ export const authOptions: AuthOptions = {
     },
     secret: process.env.NEXTAUTH_SECRET,
 };
+*/
+
