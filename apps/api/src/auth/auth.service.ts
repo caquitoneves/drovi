@@ -1,91 +1,121 @@
-// apps/api/src/auth/auth.service.ts
+//apps\api\src\auth\auth.service.ts
 
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import { UserService } from '../user/user.service';
-import * as bcrypt from 'bcryptjs';
-import { UserRole } from '../user/user-role.enum';
-import { UserDocument } from '../user/schemas/user.schema';
+import { User } from '../user/schemas/user.schema';
+import { RegisterDto } from './dto/register.dto';
+import { RegisterResponseDto } from './dto/response.dto';
+import { UserRole } from '../user/constants/user-role.enum';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Injectable()
 export class AuthService {
-    constructor(
-        private jwtService: JwtService,
-        private userService: UserService,
-    ) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+    private readonly userService: UserService,
+  ) {}
 
-    generateJwt(payload: { sub: string; email: string; role?: UserRole }) {
-        return this.jwtService.sign(payload, {
-            expiresIn: '1d',
-        });
+  /**
+   * Gera um token JWT para o payload fornecido
+   */
+  generateJwt(payload: Record<string, any>): string {
+    return this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('JWT_SECRET'),
+      expiresIn: '7d',
+    });
+  }
+
+  /**
+   * Valida um token JWT e retorna o usuário associado
+   */
+  async validateToken(token: string): Promise<User | null> {
+    try {
+      const decoded = this.jwtService.verify(token, {
+        secret: this.configService.get<string>('JWT_SECRET'),
+      });
+
+      // Busca o documento completo, incluindo a hash de senha
+      const user = await this.userService.findCompleteUserById(
+        decoded.sub,
+        true,
+      );
+      return user;
+    } catch (err) {
+      return null;
     }
+  }
 
-    verifyJwt(token: string) {
-        try {
-            return this.jwtService.verify(token);
-        } catch (error) {
-            throw new UnauthorizedException('Token inválido ou expirado');
-        }
+  /**
+   * Registra um novo usuário a partir de dados públicos (não técnicos)
+   */
+  @ApiOperation({
+    summary: 'Registro',
+    description: 'Registra um novo usuário (público: empresa ou motoboy)',
+  })
+  @ApiBody({ type: RegisterDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Registro realizado com sucesso',
+    type: RegisterResponseDto,
+  })
+  @ApiResponse({ status: 401, description: 'E-mail já está em uso' })
+  @ApiResponse({ status: 500, description: 'Falha no registro' })
+  async register(
+    name: string,
+    email: string,
+    password: string,
+    userType: 'business' | 'motoboy',
+    additionalData?: { cnpj?: string; vehicleType?: string },
+  ): Promise<RegisterResponseDto> {
+    try {
+      const existingUser = await this.userService.findByEmail(email);
+      if (existingUser) {
+        throw new UnauthorizedException('E-mail já está em uso');
+      }
+
+      const role =
+        userType === 'motoboy' ? UserRole.MOTOBOY : UserRole.BUSINESS;
+
+      const createUserPayload = {
+        name,
+        email,
+        password,
+        role,
+        ...(userType === 'business'
+          ? { cnpj: additionalData?.cnpj }
+          : { vehicleType: additionalData?.vehicleType }),
+      };
+
+      const createdUser = await this.userService.create(createUserPayload);
+
+      const token = this.generateJwt({
+        sub: createdUser.id,
+        email: createdUser.email,
+        role: createdUser.role,
+        name: createdUser.name,
+      });
+
+      const userResponse: RegisterResponseDto['user'] = {
+        id: createdUser.id,
+        email: createdUser.email,
+        name: createdUser.name,
+        role: createdUser.role,
+        ...(userType === 'business'
+          ? { cnpj: createdUser.cnpj }
+          : { vehicleType: createdUser.vehicleType }),
+      };
+
+      return { user: userResponse, token };
+    } catch (error) {
+      if (error instanceof UnauthorizedException) throw error;
+      throw new InternalServerErrorException('Falha no registro');
     }
-
-    async validateUser(email: string, password: string): Promise<UserDocument | null> {
-        const user = await this.userService.findByEmail(email, true); // Certifique-se que o método findByEmail inclui o passwordHash
-        if (!user || !user.passwordHash) return null;
-
-        const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
-        return isPasswordValid ? user : null;
-    }
-
-    async login(email: string, password: string) {
-        const user = await this.validateUser(email, password);
-        if (!user) {
-            throw new UnauthorizedException('Credenciais inválidas');
-        }
-
-        const token = this.generateJwt({
-            sub: user._id.toString(),
-            email: user.email,
-            role: user.role // Adicionado role ao token
-        });
-
-        return {
-            user: {
-                id: user._id.toString(),
-                email: user.email,
-                name: user.name,
-                role: user.role,
-            },
-            token,
-        };
-    }
-
-    async register(name: string, email: string, password: string, role: UserRole = UserRole.Business) {
-        const existing = await this.userService.findByEmail(email);
-        if (existing) {
-            throw new UnauthorizedException('E-mail já está em uso');
-        }
-
-        const createdUser = await this.userService.create({
-            name,
-            email,
-            password,
-            role,
-        });
-
-        const token = this.generateJwt({
-            sub: createdUser._id.toString(),
-            email,
-            role: createdUser.role
-        });
-
-        return {
-            user: {
-                id: createdUser._id.toString(),
-                email: createdUser.email,
-                name: createdUser.name,
-                role: createdUser.role,
-            },
-            token,
-        };
-    }
+  }
 }

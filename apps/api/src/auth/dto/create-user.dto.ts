@@ -1,21 +1,95 @@
-// apps/api/src/auth/dto/create-user.dto.ts
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsEnum,
+  IsBoolean,
+  IsOptional,
+  IsString,
+  IsNotEmpty,
+  IsEmail,
+  ValidateIf,
+  MinLength,
+} from 'class-validator';
+import { UserRole } from '../../user/constants/user-role.enum';
 
-import { IsEmail, IsEnum, IsNotEmpty, MinLength } from 'class-validator';
-import { UserRole } from '../roles.enum';
-
+/**
+ * DTO para criação técnica de usuários (uso interno/admin)
+ * @description Contém campos técnicos não expostos no registro público
+ */
 export class CreateUserDto {
-    @IsEmail()
-    email: string;
+  @ApiProperty({
+    enum: UserRole,
+    description: 'Papel técnico no sistema (admin, motoboy ou empresa)',
+    example: UserRole.ADMIN,
+  })
+  @IsEnum(UserRole)
+  role: UserRole;
 
-    @IsNotEmpty()
-    @MinLength(3)
-    name: string;
+  @ApiProperty({
+    description: 'Endereço de email do usuário',
+    example: 'usuario@exemplo.com',
+  })
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
 
-    @IsNotEmpty()
-    @IsEnum(UserRole)
-    role: UserRole;
+  @ApiProperty({
+    description: 'Senha de acesso (criptografada antes de salvar)',
+    example: 'senhaSegura123',
+  })
+  @IsString()
+  @MinLength(6, { message: 'A senha deve ter no mínimo 6 caracteres' })
+  password: string;
 
-    @IsNotEmpty()
-    @MinLength(6)
-    password: string;
+  @ApiPropertyOptional({
+    description: 'ID de integração externa (ex: ID do Auth0 ou Firebase)',
+    example: 'auth0|123456789',
+  })
+  @IsOptional()
+  @IsString()
+  externalId?: string;
+
+  @ApiPropertyOptional({
+    description: 'Define se o usuário está ativo ou não',
+    default: true,
+  })
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Justificativa técnica para criação (registro de auditoria)',
+    example: 'Migração de dados 2024',
+  })
+  @IsOptional()
+  @IsString()
+  creationReason?: string;
+
+  @ApiPropertyOptional({
+    description:
+      'Nome completo do usuário (obrigatório para motoboy e empresa)',
+    example: 'João da Silva',
+  })
+  @ValidateIf((o) => [UserRole.MOTOBOY, UserRole.BUSINESS].includes(o.role))
+  @IsString()
+  @IsNotEmpty()
+  name?: string;
+
+  @ApiPropertyOptional({
+    description:
+      'CNPJ da empresa (obrigatório para usuários do tipo "business")',
+    example: '12.345.678/0001-99',
+  })
+  @ValidateIf((o) => o.role === UserRole.BUSINESS)
+  @IsString()
+  @IsNotEmpty()
+  cnpj?: string;
+
+  @ApiPropertyOptional({
+    description: 'Tipo de veículo (obrigatório para motoboys)',
+    example: 'moto',
+  })
+  @ValidateIf((o) => o.role === UserRole.MOTOBOY)
+  @IsString()
+  @IsNotEmpty()
+  vehicleType?: string;
 }
