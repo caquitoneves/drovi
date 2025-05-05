@@ -1,5 +1,3 @@
-//apps\api\src\auth\auth.service.ts
-
 import {
   Injectable,
   InternalServerErrorException,
@@ -9,12 +7,12 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from '../user/user.service';
 import { User } from '../user/schemas/user.schema';
-import { LoginDto } from "./dto/login.dto";
+import { LoginDto } from '../auth/dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { RegisterResponseDto, LoginResponseDto } from './dto/response.dto';
 import { UserRole } from '../../common/constants/user-role.enum';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import bcrypt from 'bcryptjs/umd/types';
+import bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
@@ -74,7 +72,17 @@ export class AuthService {
     email: string,
     password: string,
     userType: 'business' | 'motoboy',
-    additionalData?: { cnpj?: string; vehicleType?: string },
+    additionalData?: {
+      cpf?: string;
+      phone?: string;
+      cep?: string;
+      state?: string;
+      city?: string;
+      street?: string;
+      complement?: string;
+      number?: string;
+      cnh?: string;
+    },
   ): Promise<RegisterResponseDto> {
     try {
       const existingUser = await this.userService.findByEmail(email);
@@ -92,7 +100,17 @@ export class AuthService {
         role,
         ...(userType === 'business'
           ? { cnpj: additionalData?.cnpj }
-          : { vehicleType: additionalData?.vehicleType }),
+          : {
+              cpf: additionalData?.cpf,
+              phone: additionalData?.phone,
+              cep: additionalData?.cep,
+              state: additionalData?.state,
+              city: additionalData?.city,
+              street: additionalData?.street,
+              complement: additionalData?.complement,
+              number: additionalData?.number,
+              cnh: additionalData?.cnh,
+            }),
       };
 
       const createdUser = await this.userService.create(createUserPayload);
@@ -111,7 +129,17 @@ export class AuthService {
         role: createdUser.role,
         ...(userType === 'business'
           ? { cnpj: createdUser.cnpj }
-          : { vehicleType: createdUser.vehicleType }),
+          : {
+              cpf: createdUser.cpf,
+              phone: createdUser.phone,
+              cep: createdUser.cep,
+              state: createdUser.state,
+              city: createdUser.city,
+              street: createdUser.street,
+              complement: createdUser.complement,
+              number: createdUser.number,
+              cnh: createdUser.cnh,
+            }),
       };
 
       return { user: userResponse, token };
@@ -139,8 +167,8 @@ export class AuthService {
   })
   @ApiResponse({ status: 401, description: 'Credenciais inválidas' })
   async login(
-      email: string,
-      password: string,
+    email: string,
+    password: string,
   ): Promise<{ user: LoginResponseDto['user']; token: string }> {
     const user = await this.userService.findByEmailWithPassword(email); // Inclui passwordHash
 
@@ -161,10 +189,20 @@ export class AuthService {
       name: user.name,
       role: user.role,
       ...(user.role === 'business'
-          ? { cnpj: user.cnpj }
-          : user.role === 'motoboy'
-              ? { vehicleType: user.vehicleType }
-              : {}),
+        ? { cnpj: user.cnpj }
+        : user.role === 'motoboy'
+          ? {
+              cpf: user.cpf,
+              phone: user.phone,
+              cep: user.cep,
+              state: user.state,
+              city: user.city,
+              street: user.street,
+              complement: user.complement,
+              number: user.number,
+              cnh: user.cnh,
+            }
+          : {}),
     };
 
     return { user: userResponse, token };

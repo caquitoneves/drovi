@@ -379,7 +379,7 @@ export default function SignUpBusinessPage() {
             <div className="flex items-center justify-center bg-white px-6 py-12">
                 <div className="w-full max-w-sm space-y-6">
                     <div>
-                        <Image src={Logo} alt="Logotipo da Drovi" width={40} height={40} className="mb-2" />
+                        <Image src={Logo} alt="Logo" width={180} height={60} className="dark:invert mb-2" />
                         <h1 className="text-2xl font-bold">Cadastro de Empresa</h1>
                         <p className="text-sm text-gray-500">Passo {step} de 3</p>
                     </div>

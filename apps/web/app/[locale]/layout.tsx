@@ -9,7 +9,6 @@ import { cn } from '@repo/design-system/lib/utils';
 import { getDictionary } from '@repo/internationalization';
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
-import { PageTransition } from '@repo/design-system/components/layouts/page-transition'
 
 export const metadata: Metadata = {
     title: 'Drovi',
@@ -33,9 +32,7 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
         >
             <body>
                 <DesignSystemProvider>
-                    <PageTransition>
                         {children}
-                    </PageTransition>
                 </DesignSystemProvider>
             </body>
         </html>

@@ -1,4 +1,4 @@
-import 'server-only';
+//import 'server-only';
 
 import type pt from './dictionaries/pt.json';
 import languine from './languine.json';

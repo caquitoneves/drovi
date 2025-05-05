@@ -1,3 +1,5 @@
+//apps\api\src\auth\dto\create-user.dto.ts
+
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsEnum,
@@ -8,6 +10,7 @@ import {
   IsEmail,
   ValidateIf,
   MinLength,
+  IsInt,
 } from 'class-validator';
 import { UserRole } from '../../../common/constants/user-role.enum';
 
@@ -65,8 +68,7 @@ export class CreateUserDto {
   creationReason?: string;
 
   @ApiPropertyOptional({
-    description:
-      'Nome completo do usuário (obrigatório para motoboy e empresa)',
+    description: 'Nome completo do usuário (obrigatório para motoboy e empresa)',
     example: 'João da Silva',
   })
   @ValidateIf((o) => [UserRole.MOTOBOY, UserRole.BUSINESS].includes(o.role))
@@ -75,8 +77,7 @@ export class CreateUserDto {
   name?: string;
 
   @ApiPropertyOptional({
-    description:
-      'CNPJ da empresa (obrigatório para usuários do tipo "business")',
+    description: 'CNPJ da empresa (obrigatório para usuários do tipo "business")',
     example: '12.345.678/0001-99',
   })
   @ValidateIf((o) => o.role === UserRole.BUSINESS)
@@ -92,4 +93,85 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   vehicleType?: string;
+
+  @ApiPropertyOptional({
+    description: 'CPF do usuário (obrigatório para motoboys)',
+    example: '000.000.000-00',
+  })
+  @ValidateIf((o) => o.role === UserRole.MOTOBOY)
+  @IsString()
+  @IsNotEmpty()
+  cpf?: string;
+
+  @ApiPropertyOptional({
+    description: 'Telefone do usuário (obrigatório para motoboys)',
+    example: '(00) 00000-0000',
+  })
+  @ValidateIf((o) => o.role === UserRole.MOTOBOY)
+  @IsString()
+  @IsNotEmpty()
+  phone?: string;
+
+  @ApiPropertyOptional({
+    description: 'CEP do usuário (obrigatório para motoboys)',
+    example: '00000-000',
+  })
+  @ValidateIf((o) => o.role === UserRole.MOTOBOY)
+  @IsString()
+  @IsNotEmpty()
+  cep?: string;
+
+  @ApiPropertyOptional({
+    description: 'Estado do usuário (obrigatório para motoboys)',
+    example: 'Estado',
+  })
+  @ValidateIf((o) => o.role === UserRole.MOTOBOY)
+  @IsString()
+  @IsNotEmpty()
+  state?: string;
+
+  @ApiPropertyOptional({
+    description: 'Cidade do usuário (obrigatório para motoboys)',
+    example: 'Cidade',
+  })
+  @ValidateIf((o) => o.role === UserRole.MOTOBOY)
+  @IsString()
+  @IsNotEmpty()
+  city?: string;
+
+  @ApiPropertyOptional({
+    description: 'Endereço do usuário (obrigatório para motoboys)',
+    example: 'Endereço',
+  })
+  @ValidateIf((o) => o.role === UserRole.MOTOBOY)
+  @IsString()
+  @IsNotEmpty()
+  street?: string;
+
+  @ApiPropertyOptional({
+    description: 'Complemento do endereço do usuário (obrigatório para motoboys)',
+    example: 'Complemento',
+  })
+  @ValidateIf((o) => o.role === UserRole.MOTOBOY)
+  @IsString()
+  @IsNotEmpty()
+  complement?: string;
+
+  @ApiPropertyOptional({
+    description: 'Número do endereço do usuário (obrigatório para motoboys)',
+    example: '123',
+  })
+  @ValidateIf((o) => o.role === UserRole.MOTOBOY)
+  @IsString()
+  @IsNotEmpty()
+  number?: string;
+
+  @ApiPropertyOptional({
+    description: 'Número da CNH do usuário (obrigatório para motoboys)',
+    example: '12345678901',
+  })
+  @ValidateIf((o) => o.role === UserRole.MOTOBOY)
+  @IsString()
+  @IsNotEmpty()
+  cnh?: string;
 }

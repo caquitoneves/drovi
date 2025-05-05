@@ -1,6 +1,8 @@
+//apps\web\middleware.ts
+
 import { NextResponse, type NextRequest } from 'next/server';
 import acceptLanguage from 'accept-language';
-import { AUTH_COOKIE_NAME } from '../common/constants/constantsDefinition';
+import { AUTH_COOKIE_NAME } from '../api/common/constants/constantsDefinition';
 
 // Configurações
 const locales = ['pt', 'en', 'es'];
