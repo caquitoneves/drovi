@@ -47,7 +47,7 @@ export class AuthController {
         try {
             const result = await this.authService.login(loginDto.email, loginDto.password);
 
-            res.cookie('auth-token', result.token, {
+            res.cookie('AUTH_COOKIE_NAME', result.token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'strict',
@@ -103,7 +103,7 @@ export class AuthController {
                 }
             );
 
-            res.cookie('auth-token', result.token, {
+            res.cookie('AUTH_COOKIE_NAME', result.token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'strict',
@@ -128,7 +128,7 @@ export class AuthController {
         description: 'Verifica se o token JWT/cookie é válido'
     })
     @ApiBearerAuth()
-    @ApiCookieAuth('auth-token')
+    @ApiCookieAuth('AUTH_COOKIE_NAME')
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Token válido',
@@ -163,11 +163,11 @@ export class AuthController {
         schema: { example: { success: true } }
     })
     async logout(@Res({ passthrough: true }) res: Response) {
-        res.clearCookie('auth-token');
+        res.clearCookie('AUTH_COOKIE_NAME');
         return { success: true };
     }
 
     private extractToken(req: Request): string | null {
-        return req.headers.authorization?.split(' ')[1] || req.cookies?.['auth-token'] || null;
+        return req.headers.authorization?.split(' ')[1] || req.cookies?.['AUTH_COOKIE_NAME'] || null;
     }
 }
