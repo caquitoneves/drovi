@@ -24,6 +24,36 @@ export class User {
 
   @Prop({ required: false })
   vehicleType?: string;
+
+  @Prop({ required: false })
+  cpf?: string;
+
+  @Prop({ required: false })
+  phone?: string;
+
+  @Prop({ required: false })
+  cep?: string;
+
+  @Prop({ required: false })
+  state?: string;
+
+  @Prop({ required: false })
+  city?: string;
+
+  @Prop({ required: false })
+  street?: string;
+
+  @Prop({ required: false })
+  complement?: string;
+
+  @Prop({ required: false })
+  number?: string;
+
+  @Prop({ required: false })
+  cnh?: string;
+
+  @Prop({ default: 'local' })
+  provider: 'local' | 'google';
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

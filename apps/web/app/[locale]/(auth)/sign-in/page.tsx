@@ -46,7 +46,7 @@ export default function SignInPage() {
     }
 
     return (
-        <div className="min-h-screen grid grid-cols-1 md:grid-cols-[3fr_2fr] bg-gray-100">
+            <div className="min-h-screen grid grid-cols-1 md:grid-cols-[3fr_2fr] bg-gray-100">
             <div className="hidden md:block" />
 
             <div className="flex items-center justify-center bg-white px-6 py-12">
@@ -54,8 +54,7 @@ export default function SignInPage() {
                     <div className="text-left">
                         {/* Logo */}
                         <div className="flex items-center gap-2">
-                            <Image src={Logo} alt="Logo" width={40} height={40} className="dark:invert" />
-                            <p className="whitespace-nowrap text-xl font-semibold text-[#222222] dark:invert">DROVI</p>
+                            <Image src={Logo} alt="Logo" width={180} height={60} className="dark:invert" />
                         </div>
                         <h1 className="text-2xl font-bold">Bom te ver de novo!</h1>
                         <p className="text-sm text-gray-500">Faça login para continuar</p>

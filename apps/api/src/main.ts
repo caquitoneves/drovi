@@ -7,7 +7,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { json, urlencoded } from 'express';
-import { AUTH_COOKIE_NAME } from '../../common/constants/constantsDefinition';
+import { AUTH_COOKIE_NAME } from '../common/constants/constantsDefinition';
 
 async function bootstrap() {
   // 1. Criação da aplicação com buffer de logs
@@ -18,7 +18,7 @@ async function bootstrap() {
 
   // 2. Serviços iniciais
   const configService = app.get(ConfigService);
-  const logger = app.get(Logger);
+  const logger = new Logger('Bootstrap'); // Cria uma instância do Logger
 
   // 3. Configuração de limites de payload
   app.use(json({ limit: '10mb' }));
@@ -26,35 +26,35 @@ async function bootstrap() {
 
   // 4. Middlewares essenciais
   app.use(cookieParser(configService.get('COOKIE_SECRET')));
-  app.useLogger(logger);
+  app.useLogger(logger); // Usa o Logger criado
 
   // 5. Configuração global de validação
   app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-      transformOptions: {
-        enableImplicitConversion: true,
-        exposeDefaultValues: true,
-      },
-      errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-      exceptionFactory: (errors) => {
-        const formattedErrors = errors.reduce((acc, error) => {
-          acc[error.property] = Object.values(error.constraints || {});
-          return acc;
-        }, {});
-        throw new HttpException(
-          {
-            statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-            message: 'Validation failed',
-            errors: formattedErrors,
-            timestamp: new Date().toISOString(),
-          },
-          HttpStatus.UNPROCESSABLE_ENTITY,
-        );
-      },
-    }),
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+        transformOptions: {
+          enableImplicitConversion: true,
+          exposeDefaultValues: true,
+        },
+        errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        exceptionFactory: (errors) => {
+          const formattedErrors = errors.reduce((acc, error) => {
+            acc[error.property] = Object.values(error.constraints || {});
+            return acc;
+          }, {});
+          throw new HttpException(
+              {
+                statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+                message: 'Validation failed',
+                errors: formattedErrors,
+                timestamp: new Date().toISOString(),
+              },
+              HttpStatus.UNPROCESSABLE_ENTITY,
+          );
+        },
+      }),
   );
 
   // 6. Filtro global de exceções
@@ -62,15 +62,15 @@ async function bootstrap() {
 
   // 7. Configuração de CORS aprimorada
   const allowedOrigins = (configService.get('NEXT_PUBLIC_WEB_URL') || '')
-    .split(',')
-    .map((url) => url.trim())
-    .filter(Boolean);
+      .split(',')
+      .map((url) => url.trim())
+      .filter(Boolean);
 
   app.enableCors({
     origin:
-      allowedOrigins.length > 0
-        ? allowedOrigins
-        : ['http://localhost:3000', 'http://localhost:3001'],
+        allowedOrigins.length > 0
+            ? allowedOrigins
+            : ['http://localhost:3000', 'http://localhost:3001'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
     allowedHeaders: [
@@ -88,9 +88,9 @@ async function bootstrap() {
   // 8. Documentação Swagger (apenas em desenvolvimento)
   if (configService.get('NODE_ENV') !== 'production') {
     const swaggerConfig = new DocumentBuilder()
-      .setTitle('Drovi Delivery API')
-      .setDescription(
-        `
+        .setTitle('Drovi Delivery API')
+        .setDescription(
+            `
         ## API para gestão de entregas
         **Roles disponíveis:**
         - ADMIN: Acesso completo
@@ -100,27 +100,27 @@ async function bootstrap() {
         ### Autenticação
         Use \`/auth/login\` para obter o token e clique no botão **Authorize** acima
       `,
-      )
-      .setVersion('1.0')
-      .addBearerAuth(
-        {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
-          description: 'Insira o token JWT sem "Bearer"',
-        },
-        'jwt',
-      )
-      .addCookieAuth(
-        AUTH_COOKIE_NAME,
-        {
-          type: 'apiKey',
-          in: 'cookie',
-          description: 'Token de autenticação HTTP-Only',
-        },
-        'cookie',
-      )
-      .build();
+        )
+        .setVersion('1.0')
+        .addBearerAuth(
+            {
+              type: 'http',
+              scheme: 'bearer',
+              bearerFormat: 'JWT',
+              description: 'Insira o token JWT sem "Bearer"',
+            },
+            'jwt',
+        )
+        .addCookieAuth(
+            AUTH_COOKIE_NAME,
+            {
+              type: 'apiKey',
+              in: 'cookie',
+              description: 'Token de autenticação HTTP-Only',
+            },
+            'cookie',
+        )
+        .build();
 
     const document = SwaggerModule.createDocument(app, swaggerConfig);
     SwaggerModule.setup('api-docs', app, document, {
@@ -135,7 +135,7 @@ async function bootstrap() {
         operationsSorter: (a, b) => {
           const order = ['POST', 'GET', 'PATCH', 'PUT', 'DELETE'];
           return (
-            order.indexOf(a.get('method')) - order.indexOf(b.get('method'))
+              order.indexOf(a.get('method')) - order.indexOf(b.get('method'))
           );
         },
       },
@@ -160,11 +160,12 @@ async function bootstrap() {
   logger.log(`🚀 Aplicação rodando em ${await app.getUrl()}/api-docs`);
   logger.log(`📌 Ambiente: ${configService.get('NODE_ENV')}`);
   logger.log(
-    `🔒 CORS habilitado para: ${allowedOrigins.join(', ') || 'localhost padrão'}`,
+      `🔒 CORS habilitado para: ${allowedOrigins.join(', ') || 'localhost padrão'}`,
   );
 }
 
 bootstrap().catch((error) => {
-  new Logger('Main').error('Falha na inicialização', error.stack);
+  const logger = new Logger('Main'); // Cria uma instância do Logger para o catch
+  logger.error('Falha na inicialização', error.stack);
   process.exit(1);
 });

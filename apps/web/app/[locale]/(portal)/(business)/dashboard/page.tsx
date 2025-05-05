@@ -1,0 +1,1 @@
+//apps/web/app/[locale]/(portal)/(business)/dashboard/page.tsx

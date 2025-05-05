@@ -2,7 +2,7 @@
 'use server';
 
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@repo/auth/auth';
+import { authOptions } from '../../../../../../web/app/api/auth/[...nextauth]/route';
 
 export async function fetchBusinessMetrics() {
     const session = await getServerSession(authOptions);

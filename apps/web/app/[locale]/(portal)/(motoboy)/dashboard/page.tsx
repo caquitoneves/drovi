@@ -1,0 +1,1 @@
+//apps/web/app/[locale]/(portal)/(motoboy)/dashboard/page.tsx

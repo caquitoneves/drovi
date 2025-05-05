@@ -1,3 +1,5 @@
+//apps\api\src\user\user.service.ts
+
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -51,6 +53,69 @@ export class SafeUserDto {
     description: 'Tipo de veículo (caso role = MOTOBOY)',
   })
   vehicleType?: string;
+
+  @ApiProperty({
+    example: '000.000.000-00',
+    required: false,
+    description: 'CPF do usuário (caso role = MOTOBOY)',
+  })
+  cpf?: string;
+
+  @ApiProperty({
+    example: '(00) 00000-0000',
+    required: false,
+    description: 'Telefone do usuário (caso role = MOTOBOY)',
+  })
+  phone?: string;
+
+  @ApiProperty({
+    example: '00000-000',
+    required: false,
+    description: 'CEP do usuário (caso role = MOTOBOY)',
+  })
+  cep?: string;
+
+  @ApiProperty({
+    example: 'Estado',
+    required: false,
+    description: 'Estado do usuário (caso role = MOTOBOY)',
+  })
+  state?: string;
+
+  @ApiProperty({
+    example: 'Cidade',
+    required: false,
+    description: 'Cidade do usuário (caso role = MOTOBOY)',
+  })
+  city?: string;
+
+  @ApiProperty({
+    example: 'Endereço',
+    required: false,
+    description: 'Endereço do usuário (caso role = MOTOBOY)',
+  })
+  street?: string;
+
+  @ApiProperty({
+    example: 'Complemento',
+    required: false,
+    description: 'Complemento do endereço do usuário (caso role = MOTOBOY)',
+  })
+  complement?: string;
+
+  @ApiProperty({
+    example: '123',
+    required: false,
+    description: 'Número do endereço do usuário (caso role = MOTOBOY)',
+  })
+  number?: string;
+
+  @ApiProperty({
+    example: '12345678901',
+    required: false,
+    description: 'Número da CNH do usuário (caso role = MOTOBOY)',
+  })
+  cnh?: string;
 }
 
 /**
@@ -62,8 +127,8 @@ export class UserService {
   private readonly SALT_ROUNDS = 10;
 
   constructor(
-      @InjectModel(User.name)
-      private userModel: Model<UserDocument>,
+    @InjectModel(User.name)
+    private userModel: Model<UserDocument>,
   ) {}
 
   /**
@@ -72,10 +137,10 @@ export class UserService {
    */
   async findAll(): Promise<SafeUserDto[]> {
     const users = await this.userModel
-        .find()
-        .select('-passwordHash')
-        .lean()
-        .exec();
+      .find()
+      .select('-passwordHash')
+      .lean()
+      .exec();
     return users.map((user) => this.toSafeUserDto(user));
   }
 
@@ -86,10 +151,10 @@ export class UserService {
    */
   async findOne(id: string): Promise<SafeUserDto | null> {
     const user = await this.userModel
-        .findById(id)
-        .select('-passwordHash')
-        .lean()
-        .exec();
+      .findById(id)
+      .select('-passwordHash')
+      .lean()
+      .exec();
     return user ? this.toSafeUserDto(user) : null;
   }
 
@@ -109,13 +174,13 @@ export class UserService {
    * @returns {Promise<UserDocument | null>}
    */
   async findCompleteUserById(
-      id: string,
-      includePasswordHash = false,
+    id: string,
+    includePasswordHash = false,
   ): Promise<UserDocument | null> {
     const query = this.userModel.findById(id);
     const finalQuery = includePasswordHash
-        ? query
-        : query.select('-passwordHash');
+      ? query
+      : query.select('-passwordHash');
     return finalQuery.exec();
   }
 
@@ -128,13 +193,13 @@ export class UserService {
    * @returns {Promise<SafeUserDto | UserDocument | null>}
    */
   async findByEmail(
-      email: string,
-      includePasswordHash: boolean = false,
+    email: string,
+    includePasswordHash: boolean = false,
   ): Promise<SafeUserDto | UserDocument | null> {
     const query = this.userModel.findOne({ email });
     const finalQuery = includePasswordHash
-        ? query
-        : query.select('-passwordHash');
+      ? query
+      : query.select('-passwordHash');
     const user = await finalQuery.exec();
 
     if (!user) return null;
@@ -156,6 +221,15 @@ export class UserService {
       role: data.role,
       cnpj: data.cnpj,
       vehicleType: data.vehicleType,
+      cpf: data.cpf,
+      phone: data.phone,
+      cep: data.cep,
+      state: data.state,
+      city: data.city,
+      street: data.street,
+      complement: data.complement,
+      number: data.number,
+      cnh: data.cnh,
       passwordHash,
     });
 
@@ -186,6 +260,15 @@ export class UserService {
       role: user.role || UserRole.GUEST,
       cnpj: user.cnpj,
       vehicleType: user.vehicleType,
+      cpf: user.cpf,
+      phone: user.phone,
+      cep: user.cep,
+      state: user.state,
+      city: user.city,
+      street: user.street,
+      complement: user.complement,
+      number: user.number,
+      cnh: user.cnh,
     };
   }
 }
