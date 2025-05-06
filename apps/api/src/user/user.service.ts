@@ -5,7 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { User, UserDocument } from './schemas/user.schema';
-import { CreateUserDto } from '../auth/dto/create-user.dto';
+import { CreateUserDto } from '../auth/dto/createUser.dto';
 import { UserRole } from '../../common/constants/user-role.enum';
 import * as bcrypt from 'bcryptjs';
 
@@ -215,23 +215,8 @@ export class UserService {
   async create(data: CreateUserDto): Promise<SafeUserDto> {
     const passwordHash = await bcrypt.hash(data.password, this.SALT_ROUNDS);
 
-    const createdUser = await this.userModel.create({
-      email: data.email,
-      name: data.name,
-      role: data.role,
-      cnpj: data.cnpj,
-      vehicleType: data.vehicleType,
-      cpf: data.cpf,
-      phone: data.phone,
-      cep: data.cep,
-      state: data.state,
-      city: data.city,
-      street: data.street,
-      complement: data.complement,
-      number: data.number,
-      cnh: data.cnh,
-      passwordHash,
-    });
+    const createdUser = await this.userModel.create({ ...data, passwordHash });
+    console.log(this.userModel);
 
     return this.toSafeUserDto(createdUser.toObject());
   }

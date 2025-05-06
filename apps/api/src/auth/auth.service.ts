@@ -8,11 +8,10 @@ import { ConfigService } from '@nestjs/config';
 import { UserService } from '../user/user.service';
 import { User } from '../user/schemas/user.schema';
 import { LoginDto } from '../auth/dto/login.dto';
-import { RegisterDto } from './dto/register.dto';
 import { RegisterResponseDto, LoginResponseDto } from './dto/response.dto';
-import { UserRole } from '../../common/constants/user-role.enum';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import bcrypt from 'bcryptjs';
+import { CreateUserDto } from './dto/createUser.dto';
 
 @Injectable()
 export class AuthService {
@@ -59,7 +58,7 @@ export class AuthService {
     summary: 'Registro',
     description: 'Registra um novo usuário (público: empresa ou motoboy)',
   })
-  @ApiBody({ type: RegisterDto })
+  @ApiBody({ type: 'registerUserDto' })
   @ApiResponse({
     status: 201,
     description: 'Registro realizado com sucesso',
@@ -67,53 +66,16 @@ export class AuthService {
   })
   @ApiResponse({ status: 401, description: 'E-mail já está em uso' })
   @ApiResponse({ status: 500, description: 'Falha no registro' })
-  async register(
-    name: string,
-    email: string,
-    password: string,
-    userType: 'business' | 'motoboy',
-    additionalData?: {
-      cpf?: string;
-      phone?: string;
-      cep?: string;
-      state?: string;
-      city?: string;
-      street?: string;
-      complement?: string;
-      number?: string;
-      cnh?: string;
-    },
-  ): Promise<RegisterResponseDto> {
+  async register(registerDto: CreateUserDto): Promise<RegisterResponseDto> {
     try {
-      const existingUser = await this.userService.findByEmail(email);
+      const existingUser = await this.userService.findByEmail(
+        registerDto.email,
+      );
       if (existingUser) {
         throw new UnauthorizedException('E-mail já está em uso');
       }
 
-      const role =
-        userType === 'motoboy' ? UserRole.MOTOBOY : UserRole.BUSINESS;
-
-      const createUserPayload = {
-        name,
-        email,
-        password,
-        role,
-        ...(userType === 'business'
-          ? { cnpj: additionalData?.cnpj }
-          : {
-              cpf: additionalData?.cpf,
-              phone: additionalData?.phone,
-              cep: additionalData?.cep,
-              state: additionalData?.state,
-              city: additionalData?.city,
-              street: additionalData?.street,
-              complement: additionalData?.complement,
-              number: additionalData?.number,
-              cnh: additionalData?.cnh,
-            }),
-      };
-
-      const createdUser = await this.userService.create(createUserPayload);
+      const createdUser = await this.userService.create(registerDto);
 
       const token = this.generateJwt({
         sub: createdUser.id,
@@ -127,19 +89,6 @@ export class AuthService {
         email: createdUser.email,
         name: createdUser.name,
         role: createdUser.role,
-        ...(userType === 'business'
-          ? { cnpj: createdUser.cnpj }
-          : {
-              cpf: createdUser.cpf,
-              phone: createdUser.phone,
-              cep: createdUser.cep,
-              state: createdUser.state,
-              city: createdUser.city,
-              street: createdUser.street,
-              complement: createdUser.complement,
-              number: createdUser.number,
-              cnh: createdUser.cnh,
-            }),
       };
 
       return { user: userResponse, token };
@@ -188,21 +137,6 @@ export class AuthService {
       email: user.email,
       name: user.name,
       role: user.role,
-      ...(user.role === 'business'
-        ? { cnpj: user.cnpj }
-        : user.role === 'motoboy'
-          ? {
-              cpf: user.cpf,
-              phone: user.phone,
-              cep: user.cep,
-              state: user.state,
-              city: user.city,
-              street: user.street,
-              complement: user.complement,
-              number: user.number,
-              cnh: user.cnh,
-            }
-          : {}),
     };
 
     return { user: userResponse, token };
