@@ -482,7 +482,7 @@ export default function SignUpMotoboyPage() {
     if (step === 4) {
       try {
         // Substituir por chamada real à API
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -220,7 +220,6 @@ export class UserService {
       name: data.name,
       role: data.role,
       cnpj: data.cnpj,
-      vehicleType: data.vehicleType,
       cpf: data.cpf,
       phone: data.phone,
       cep: data.cep,

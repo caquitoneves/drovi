@@ -16,7 +16,9 @@ import { AuthModule } from './auth/auth.module';
     }),
 
     // Conexão com MongoDB via variável de ambiente
-    MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://localhost:27017/drovi'),
+    MongooseModule.forRoot(
+      process.env.MONGODB_URI || 'mongodb://localhost:27017/drovi',
+    ),
 
     // Módulos da aplicação
     UserModule,

@@ -86,15 +86,6 @@ export class CreateUserDto {
   cnpj?: string;
 
   @ApiPropertyOptional({
-    description: 'Tipo de veículo (obrigatório para motoboys)',
-    example: 'moto',
-  })
-  @ValidateIf((o) => o.role === UserRole.MOTOBOY)
-  @IsString()
-  @IsNotEmpty()
-  vehicleType?: string;
-
-  @ApiPropertyOptional({
     description: 'CPF do usuário (obrigatório para motoboys)',
     example: '000.000.000-00',
   })

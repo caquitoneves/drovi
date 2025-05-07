@@ -360,9 +360,37 @@ export default function SignUpBusinessPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+    
         if (step === 3) {
             try {
-                console.log('Dados enviados:', formData);
+                const data = new FormData();
+    
+                // Campos normais
+                data.append('name', formData.name);
+                data.append('cnpj', formData.cnpj.replace(/\D/g, ''));
+                data.append('phone', formData.phone.replace(/\D/g, ''));
+                data.append('email', formData.email);
+                data.append('password', formData.password);
+                data.append('cep', formData.cep.replace('-', ''));
+                data.append('state', formData.state);
+                data.append('city', formData.city);
+                data.append('street', formData.street);
+                data.append('number', formData.number);
+                data.append('complement', formData.complement);
+    
+                // Arquivos
+                if (formData.cnpjProof) data.append('cnpjProof', formData.cnpjProof);
+                if (formData.addressProof) data.append('addressProof', formData.addressProof);
+    
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`, {
+                    method: 'POST',
+                    body: data,
+                });
+    
+                if (!res.ok) throw new Error('Erro ao cadastrar');
+    
+                const result = await res.json();
+                console.log('Cadastro realizado:', result);
                 alert('Cadastro enviado com sucesso!');
             } catch (error) {
                 console.error('Erro ao enviar cadastro:', error);

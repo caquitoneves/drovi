@@ -23,9 +23,6 @@ export class User {
   cnpj?: string;
 
   @Prop({ required: false })
-  vehicleType?: string;
-
-  @Prop({ required: false })
   cpf?: string;
 
   @Prop({ required: false })

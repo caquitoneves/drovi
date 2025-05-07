@@ -13,6 +13,7 @@ import { RegisterResponseDto, LoginResponseDto } from './dto/response.dto';
 import { UserRole } from '../../common/constants/user-role.enum';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import bcrypt from 'bcryptjs';
+import { verify } from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -82,6 +83,7 @@ export class AuthService {
       complement?: string;
       number?: string;
       cnh?: string;
+      cnpj?: string;
     },
   ): Promise<RegisterResponseDto> {
     try {

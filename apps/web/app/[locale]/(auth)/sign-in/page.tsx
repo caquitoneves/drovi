@@ -10,6 +10,7 @@ import { FaApple, FaMicrosoft } from 'react-icons/fa';
 import Logo from '@repo/design-system/components/logo/logo.svg';
 import { FormEvent, useState } from 'react';
 import { signIn } from 'next-auth/react';
+import motoboyImage from "@repo/design-system/images/motoboy.png"
 
 export default function SignInPage() {
     const params = useParams();
@@ -46,9 +47,15 @@ export default function SignInPage() {
     }
 
     return (
-            <div className="min-h-screen grid grid-cols-1 md:grid-cols-[3fr_2fr] bg-gray-100">
-            <div className="hidden md:block" />
-
+            <div className="min-h-screen grid grid-cols-1 md:grid-cols-[75%_25%] bg-gray-100">
+                <div className="hidden md:block relative">
+                    <Image
+                        src={motoboyImage} // Caminho para a imagem do motoboy
+                        alt="Motoboy Drovi Arte"
+                        fill
+                        className="object-cover"
+                    />
+                </div>
             <div className="flex items-center justify-center bg-white px-6 py-12">
                 <div className="w-full max-w-sm space-y-6">
                     <div className="text-left">
